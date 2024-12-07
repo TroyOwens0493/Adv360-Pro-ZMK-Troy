@@ -1,0 +1,15 @@
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/obj/Debug/net8.0/terminal_editor.GeneratedMSBuildEditorConfig.editorconfig
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/obj/Debug/net8.0/terminal_editor.AssemblyInfoInputs.cache
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/obj/Debug/net8.0/terminal_editor.AssemblyInfo.cs
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/obj/Debug/net8.0/terminal_editor.csproj.CoreCompileInputs.cache
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/obj/Debug/net8.0/terminal_editor.sourcelink.json
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/bin/Debug/net8.0/terminal_editor
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/bin/Debug/net8.0/terminal_editor.deps.json
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/bin/Debug/net8.0/terminal_editor.runtimeconfig.json
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/bin/Debug/net8.0/terminal_editor.dll
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/bin/Debug/net8.0/terminal_editor.pdb
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/obj/Debug/net8.0/terminal_editor.dll
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/obj/Debug/net8.0/refint/terminal_editor.dll
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/obj/Debug/net8.0/terminal_editor.pdb
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/obj/Debug/net8.0/terminal_editor.genruntimeconfig.cache
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminal_editor/obj/Debug/net8.0/ref/terminal_editor.dll
