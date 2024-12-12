@@ -35,11 +35,12 @@ class FileManager
                     continue;
                 }
 
-
-                //Store the line before the map to know what the map is called
-                if (!isKeymapLine)
+                //Store the line before the map because that is the name
+                if (isKeymapLine)
                 {
-                    keymapNames.Add(prevLine);
+                    //Delete the space an curly brace
+                    var seperatedLine = prevLine.Split(" ");
+                    keymapNames.Add(seperatedLine[0]);
                     isKeymapLine = false;
                 }
                 //Store the line for later use
@@ -104,47 +105,170 @@ class FileManager
 
     public void MakeNewKeymap(string keymapName)
     {
+        //Default vals for the keymap
+        List<Key> defaultLayout = new();
+        // List of keypresses
+        List<string> keyPresses = new List<string>
+        {
+            "EQUAL", "N1", "N2", "N3", "N4", "N5", "TOG 1", "MO 3", "N6", "N7", "N8", "N9", "N0", "MINUS",
+            "TAB", "Q", "W", "E", "R", "T", "NONE", "NONE", "Y", "U", "I", "O", "P", "BSLH",
+            "ESC", "A", "S", "D", "F", "G", "NONE", "LCTRL", "LALT", "LGUI", "RCTRL", "NONE", "H", "J", "K", "L", "SEMI", "SQT",
+            "LSHFT", "Z", "X", "C", "V", "B", "HOME", "PG_UP", "N", "M", "COMMA", "DOT", "FSLH", "RSHFT",
+            "MO 2", "GRAVE", "CAPS", "LEFT", "RIGHT", "BSPC", "DEL", "END", "PG_DN", "ENTER", "SPACE", "UP", "DOWN", "LBKT", "RBKT", "MO 2"
+        };
+
+        // List of actions
+        List<string> actions = new List<string>
+        {
+            "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&tog", "&mo", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp",
+            "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&none", "&none", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp",
+            "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&none", "&kp", "&kp", "&kp", "&kp", "&none", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp",
+            "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp",
+            "&mo", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&mo"
+        };
+
+        //Build the default layout from the raw data.
+        for (int itr = 0; itr < keyPresses.Count(); itr++)
+        {
+            var keyPress = keyPresses[itr];
+            var keyAction = actions[itr];
+            Key newKey = new Key(itr, keyAction, keyPress);
+            defaultLayout.Add(newKey);
+        }
+
+        //Make the skeleton for the new keymap
+        //Vars
+        string[] lines = File.ReadAllLines(_keymapFilePath);
+        var fileLength = lines.Count();
+        var indexToStartNewKeymap = fileLength - 2;
+        string[] fileData = new string[fileLength + 8];
+        Array.Copy(lines, 0, fileData, 0, indexToStartNewKeymap);
+        //Write skeleton
+        fileData[indexToStartNewKeymap] = keymapName + "{";
+        fileData[indexToStartNewKeymap + 1] = "bindings = <";
+        for (int i = 1; i < 6; i++)
+        {
+            fileData[indexToStartNewKeymap + i] = " ";
+        }
+        fileData[indexToStartNewKeymap + 6] = ">;";
+        fileData[indexToStartNewKeymap + 7] = "};";
+        WriteDataToFile(_keymapFilePath, fileData);
+
+        //Write the raw data
+        RightSide newLayout = new(defaultLayout);
+        WriteKeymap(keymapName, newLayout);
     }
 
-    public void WriteKeymap(string keymapName)
+    public void WriteKeymap(string keymapName, Keymap sideKeymap)
     {
-        //Write contents of file into array
+        //Vars for writing to file
+        var layout = sideKeymap.GetLayout();
         string[] lines = File.ReadAllLines(_keymapFilePath);
-
         bool isCorrectKeymapLine = false;
-        int itr = 0;
+        int currentRow = 0;
 
-        foreach (string line in lines)
+        //Loop through the file
+        for (int lineNum = 0; lineNum < lines.Count(); lineNum++)
         {
-            if (line.StartsWith(keymapName))
+            var currentLine = lines[lineNum];
+            if (currentLine.StartsWith(keymapName))
             {
                 isCorrectKeymapLine = true;
-                itr = 0;
+                currentRow = 0;
             }
 
-            if (itr == 0 & isCorrectKeymapLine) //Don't overwrite the bindings marker.
+            // Don't overwrite the bindings marker
+            if (currentRow == 0 & isCorrectKeymapLine)
             {
                 continue;
             }
 
+            //Set the length of the row
             if (isCorrectKeymapLine)
             {
-                // Finish this function
+                var rowLength = 0;
+                if (currentRow == 0)
+                {
+                    rowLength = 13;
+                }
+                else if (currentRow == 1)
+                {
+                    rowLength = 27;
+                }
+                else if (currentRow == 2)
+                {
+                    rowLength = 45;
+                }
+                else if (currentRow == 3)
+                {
+                    rowLength = 59;
+                }
+                else if (currentRow == 4)
+                {
+                    rowLength = 75;
+                }
+
+                // Write the new key data
+                currentLine = " ";
+                for (int currentKeyindex = 0; currentKeyindex < rowLength; currentKeyindex++)
+                {
+                    var currentKey = layout[currentKeyindex];
+                    currentLine += $"{currentKey.GetZmkPress()} {currentKey.GetZmkAction()}";
+                }
+                currentRow++;
             }
         }
+        //Write to file
+        WriteDataToFile(_keymapFilePath, lines);
     }
 
     public List<string> ParseMacroNames()
     {
-        List<string> res = new();
-        return res;
+        string[] lines = File.ReadAllLines(_macroFilePath);
+        List<string> macroNames = new();
+        foreach (string line in lines)
+        {
+            if (line.EndsWith("{"))
+            {
+                var rawName = line.Split(" ");
+                string cleanName = rawName[1].Remove(rawName[1].Length - 1);
+                macroNames.Add(cleanName);
+            }
+        }
+
+        return macroNames;
     }
 
     public Macro ParseMacro(string macroName)
     {
-        List<Key> ls = new();
-        Macro res = new(ls);
-        return res;
+        string[] lines = File.ReadAllLines(_macroFilePath);
+        bool isCorrectMacroLine = false;
+        List<Key> macroActions = new();
+
+        for (int i = 0; i < lines.Length; i++)
+        {
+            var currentLine = lines[i];
+            if (currentLine.StartsWith(macroName))
+            {
+                isCorrectMacroLine = true;
+            }
+
+            if (isCorrectMacroLine && currentLine.StartsWith("bindings ="))
+            {
+                var splitLine = currentLine.Split(",");
+                var splitLineList = splitLine.ToList();
+                splitLineList.RemoveAt(0);
+            }
+            else
+            {
+                continue;
+            }
+        }
+
+        //All this is just to remove errs. Please delete later
+        Key newKey = new Key("", "");
+        Macro newMac = new Macro([newKey, newKey]);
+        return newMac;
     }
 
     public void MakeNewMacro(string macroName)
@@ -153,5 +277,17 @@ class FileManager
 
     public void WriteMacro()
     {
+    }
+
+    private void WriteDataToFile(string filePath, string[] data)
+    {
+        //Write to file
+        using (var writer = new StreamWriter(filePath))
+        {
+            foreach (string line in data)
+            {
+                writer.WriteLine(line);
+            }
+        }
     }
 }

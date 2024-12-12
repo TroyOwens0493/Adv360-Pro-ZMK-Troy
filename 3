@@ -33,7 +33,7 @@ class MenuManager
         Console.Clear();
         Console.WriteLine("Please choose which side you would like to edit.");
         Console.WriteLine("1. Left 2. Right");
-        int side = _userInput.GetIntFromUser(1, 2);
+        int side =  _userInput.GetIntFromUser(1, 2);
         if (side == 1)
         {
             return "left";
@@ -49,7 +49,7 @@ class MenuManager
         Console.Clear();
         leftSide.Disp();
         Console.Write("What key would you like to edit? ");
-        return _userInput.GetIntFromUser(1, 38) - 1;
+        return _userInput.GetIntFromUser(1, 38);
     }
 
     public int EditRightSide(Keymap rightSide)
@@ -57,7 +57,7 @@ class MenuManager
         Console.Clear();
         rightSide.Disp();
         Console.Write("What key would you like to edit? ");
-        return _userInput.GetIntFromUser(1, 38) - 1;
+        return _userInput.GetIntFromUser(1, 38);
     }
 
     public Key EditKeyPressType(Key keyToEdit)
@@ -70,20 +70,10 @@ class MenuManager
         int pressIndex = _userInput.GetIntFromUser(1, presses.Count() - 1);
         keyToEdit.SetKeyPress(presses[pressIndex]);
         keyToEdit.SetZmkPress(_keyTans.GetZmkPress(presses[pressIndex]));
-        return keyToEdit;
     }
 
-    public Key EditKeyAction(Key keyToEdit)
+    public void EditKeyAction(Key keyToEdit)
     {
-        Console.Clear();
-        Console.WriteLine($"The currennt key action for this key is {keyToEdit.GetKeyAction()}");
-        Console.WriteLine("What would you like the new action to be? ");
-        var actions = _keyTans.GetAllActions();
-        PrintList(actions);
-        int actionIndex = _userInput.GetIntFromUser(1, actions.Count() - 1);
-        keyToEdit.SetKeyAction(actions[actionIndex]);
-        keyToEdit.SetZmkAction(_keyTans.GetZmkAction(actions[actionIndex]));
-        return keyToEdit;
     }
 
     public void MakeLayout()
@@ -133,16 +123,16 @@ class MenuManager
         PrintList(keyActions);
     }
 
-    //Print lists w/index and makes columns when needed.
+    //Print lists w/index and make columns when needed.
     private void PrintList(List<string> list)
     {
-        // Get the current cursor position at the bottom of existing content
-        var x = 0;
+        var x = Console.CursorLeft;
         var y = Console.CursorTop;
+        var yStart = y;
         var terminalHeight = Console.WindowHeight;
         int columnWidth = 0;
 
-        for (int i = 0; i < list.Count; i++)
+        for (int i = 1; i < list.Count(); i++)
         {
             // Print the option in the current position
             Console.SetCursorPosition(x, y);
@@ -155,12 +145,13 @@ class MenuManager
             y++;  // Move down one line
 
             // Check if we need to move to the next column (halfway down the terminal)
-            if (y >= terminalHeight - 1)
+            if (y >= (terminalHeight / 2) + 2)  // +2 accounts for the header lines
             {
-                y = Console.CursorTop - terminalHeight + 1;  // Reset y to start of next column
+                y = yStart;  // Reset y to start below the headers
                 x += columnWidth + 1;  // Move x to the next column
                 columnWidth = 0;
             }
         }
+        Console.SetCursorPosition(0, (terminalHeight / 2) + 3);
     }
 }

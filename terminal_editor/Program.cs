@@ -3,6 +3,72 @@
     static void Main()
     {
         MenuManager _menus = new();
-        int userSelextion = _menus.MainMenu();
+        FileManager _fileMan = new("../config/adv360.keymap", "../config/macros.dtsi");
+        InputValidationHandler _input = new();
+        int userSelection = _menus.MainMenu();
+
+        switch (userSelection)
+        {
+            case 1:
+                do
+                {
+                    int layoutIndex = _menus.ChooseLayout() - 1;
+                    List<string> keymapNames = _fileMan.ParseKeymapNames();
+                    var layoutName = keymapNames[layoutIndex];
+                    string side = _menus.KeyBoardSideSelector();
+                    var layout = _fileMan.ParseKeysInMap(layoutName);
+
+                    if (side == "left")
+                    {
+                        var leftSide = new LeftSide(layout);
+                        int keyRelativeIndex = _menus.EditLeftSide(leftSide);
+                        int keyPermanentIndex = leftSide.GetKeyPermanentIndex(keyRelativeIndex);
+                        var finishedKey = _menus.EditKeyPressType(layout[keyPermanentIndex]);
+                        layout[keyPermanentIndex] = finishedKey;
+                        _fileMan.WriteKeymap(layoutName, leftSide);
+                    }
+                    else
+                    {
+                        var rightSide = new RightSide(layout);
+                        int keyRelativeIndex = _menus.EditRightSide(rightSide);
+                        int keyPermanentIndex = rightSide.GetKeyPermanentIndex(keyRelativeIndex);
+                        var finishedKey = _menus.EditKeyPressType(layout[keyPermanentIndex]);
+                        layout[keyPermanentIndex] = finishedKey;
+                        _fileMan.WriteKeymap(layoutName, rightSide);
+                    }
+                    Console.Clear();
+                    Console.WriteLine("Would you like to edit another key in the keymap? (y/n)");
+                    string res = _input.GetStringFromUser();
+                    if (res != "y")
+                    {
+                        break;
+                    }
+                } while (true);
+                break;
+
+            case 2:
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine("What would you like your new keymap to be called?");
+                    Console.WriteLine("Do not use special characters or spaces.");
+                    string newLayerName = _input.GetStringFromUser();
+                    _fileMan.MakeNewKeymap(newLayerName);
+                    Console.Clear();
+                    Console.WriteLine("Would you like to make a new keymap? (y/n)");
+                    var res = _input.GetStringFromUser();
+                    if (res != "y")
+                    {
+                        break;
+                    }
+                } while (true);
+                break;
+
+            case 3:
+                do
+                {
+                } while(true);
+                break;
+        }
     }
 }

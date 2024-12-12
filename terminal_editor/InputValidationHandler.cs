@@ -44,6 +44,6 @@ class InputValidationHandler
             res = Console.ReadLine();
         } while (res != "");
 
-        return res;
+        return res.ToLower();
     }
 }

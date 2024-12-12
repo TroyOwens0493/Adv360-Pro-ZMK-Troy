@@ -1,29 +1,420 @@
 class KeyTranslator
 {
     //Attr
-    private List<string> _zmkKeyActions = new();
-    private List<string> _zmkKeyPresses = new();
-    private List<string> _keyActions = new();
-    private List<string> _keyPresses = new();
+    private readonly List<string> _zmkKeyActions = new();
+    private readonly List<string> _zmkKeyPresses = new();
+    private readonly List<string> _zmkMacroModifiers = new();
+    private readonly List<string> _keyActions = new();
+    private readonly List<string> _keyPresses = new();
+    private readonly List<string> _macroModifiers = new();
 
     //Methods
+    public KeyTranslator()
+    {
+        // List of normal English keycodes
+        _keyPresses = new List<string>
+        {
+            "Key Press",
+            "Key Hold",
+            "Layer Tap",
+            "To Layer",
+            "Toggle Layer",
+            "Transparent",
+            "None",
+            "Hold-Tap",
+            "Mod-Tap",
+            "Mod-Morph",
+            "Tap key in macro",
+            "Hold key in macro",
+            "Release key in macro",
+            "Key Toggle",
+            "Sticky Key",
+            "Sticky Layer",
+            "Tap Dance",
+            "Caps Word",
+            "Key Repeat",
+            "Mouse Key Press",
+            "Reset To Factory Settings",
+            "Enter Bootloader",
+            "Bluetooth",
+            "Indicator lights",
+            "Backlight",
+            "&ext_power",
+            "Soft off"
+        };
+
+        // List of ZMK keycodes
+        _zmkKeyPresses = new List<string>
+        {
+            "&kp",
+            "&mo",
+            "&lt",
+            "&lt",
+            "&tog",
+            "&trans",
+            "&none",
+            "&ht-hp",
+            "&mt",
+            "&gresc",
+            "&macro_tap",
+            "&macro_press",
+            "&macro_release",
+            "&kt",
+            "&sk",
+            "&sl",
+            "&td",
+            "&caps_word",
+            "&key_repeat",
+            "&mkkp",
+            "&reset",
+            "&bootloader",
+            "&bt",
+            "&rgb_ug",
+            "&bl",
+            "&ext_power",
+            "&soft_off"
+        };
+
+        _keyActions = new List<string>
+        {
+            "1 and !",
+            "2 and @",
+            "3 and #",
+            "4 and $",
+            "5 and %",
+            "6 and ^",
+            "7 and &",
+            "8 and *",
+            "9 and (",
+            "0 and )",
+            "!",
+            "@",
+            "#",
+            "$",
+            "%",
+            "^",
+            "&",
+            "*",
+            "(",
+            ")",
+            "= and +",
+            "+",
+            "-",
+            "_",
+            "/",
+            "?",
+            "\\ and |",
+            "|",
+            "Non-US \\ and |",
+            "; and :",
+            "' and \"",
+            "\"",
+            ",",
+            "<",
+            ">",
+            "[ and {",
+            "] and }",
+            "` and ~",
+            "~",
+            "Non-US # and ~",
+            "Escape",
+            "Return",
+            "Enter",
+            "Space",
+            "Tab",
+            "Backspace",
+            "Delete",
+            "Insert",
+            "Home",
+            "End",
+            "Page UP",
+            "Page Down",
+            "Up Arrow",
+            "Down Arrow",
+            "Left Arrow",
+            "Right Arrow",
+            "Application (Context Menu)",
+            "Caps Lock",
+            "Locking Caps Lock",
+            "Scroll Lock",
+            "Locking Num",
+            "Print Screen",
+            "Pause/Break",
+            "Alternate Erase",
+            "SysReq/Attention",
+            "Cancel",
+            "Clear",
+            "Clear/Again",
+            "CrSel/Props",
+            "Prior",
+            "Separator",
+            "Out",
+            "Oper",
+            "ExSel",
+            "Edit Keyboard",
+            "Left Shift",
+            "Right Shift",
+            "Left Control",
+            "Right Control",
+            "Left Alt",
+            "Right Alt",
+            "Left Command",
+            "Right Command",
+            "Numlock and Clear",
+            "Keypad Clear",
+            "Keypad Enter",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "0",
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6",
+            "F7",
+            "F8",
+            "F9",
+            "F10",
+            "F11",
+            "F12",
+            " +",
+            "- ",
+            "* ",
+            "/ ",
+            "=",
+            ".",
+            ". ",
+            ",",
+            "Left Parenthesis",
+            "Right Parenthesis",
+            "Cut",
+            "Copy",
+            "Paste",
+            "Undo",
+            "Redo/Repeat",
+            "Volume Up",
+            "Volume Down",
+            "Mute",
+            "Alternate Audio Increment",
+            "Increase Brightness",
+            "Decrease Brightness",
+            "Max Brightness",
+            "Min Brightness",
+            "Auto Brightness",
+            "Backlight Toggle",
+            "Picture in Picture",
+            "Channel Increment",
+            "Channel Decrement",
+            "Recall Last",
+            "VCR Plus",
+            "Mode Step",
+            "Bluetooth select "
+        };
+
+        _zmkKeyActions = new List<string>
+        {
+            "N1",
+            "N2",
+            "N3",
+            "N4",
+            "N5",
+            "N6",
+            "N7",
+            "N8",
+            "N9",
+            "N0",
+            "EXCL",
+            "AT",
+            "HASH",
+            "DOLLAR",
+            "PERCENT",
+            "CARET",
+            "AMPERSAND",
+            "STAR",
+            "LPAR",
+            "RPAR",
+            "EQUAL",
+            "PLUS",
+            "MINUS",
+            "UNDERSCORE",
+            "FSLH",
+            "QUESTION",
+            "BSLH",
+            "PIPE",
+            "NON_US_BACKSLASH",
+            "SEMI",
+            "SQT",
+            "DOUBLE_QUOTES",
+            "COMMA",
+            "LT",
+            "GT",
+            "LBKT",
+            "RBKT",
+            "GRAVE",
+            "TILDE",
+            "NON_US_HASH",
+            "ESC",
+            "RETURN",
+            "ENTER",
+            "SPACE",
+            "TAB",
+            "BSPC",
+            "DEL",
+            "INSERT",
+            "HOME",
+            "END",
+            "PAGE_UP",
+            "PAGE_DOWN",
+            "UP",
+            "DOWN",
+            "LEFT",
+            "RIGHT",
+            "K_APPLICATION",
+            "CAPS",
+            "LOCKING_CAPS",
+            "SCROLLLOCK",
+            "KP_NUM",
+            "PRINTSCREEN",
+            "PAUSE_BREAK",
+            "ALT_ERASE",
+            "SYSREQ",
+            "K_CANCEL",
+            "CLEAR",
+            "CLEAR_AGAIN",
+            "CRSEL",
+            "PRIOR",
+            "SEPARATOR",
+            "OUT",
+            "OPER",
+            "EXSEL",
+            "K_EDIT",
+            "LSHFT",
+            "RSHFT",
+            "LEFT_CONTROL",
+            "RIGHT_CONTROL",
+            "LEFT_ALT",
+            "RIGHT_ALT",
+            "LEFT_COMMAND",
+            "RIGHT_COMMAND",
+            "KP_NUMLOCK",
+            "KP_CLEAR",
+            "KP_ENTER",
+            "KP_N1",
+            "KP_N2",
+            "KP_N3",
+            "KP_N4",
+            "KP_N5",
+            "KP_N6",
+            "KP_N7",
+            "KP_N8",
+            "KP_N9",
+            "KP_N0",
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6",
+            "F7",
+            "F8",
+            "F9",
+            "F10",
+            "F11",
+            "F12",
+            "KP_PLUS",
+            "KP_MINUS",
+            "KP_MULTIPLY",
+            "KP_DIVIDE",
+            "KP_EQUAL",
+            "DOT",
+            "KP_DOT",
+            "KP_COMMA",
+            "KP_LPAR",
+            "KP_RPAR",
+            "C_AC_CUT",
+            "C_AC_COPY",
+            "C_AC_PASTE",
+            "C_AC_UNDO",
+            "C_AC_REDO",
+            "C_VOLUME_UP",
+            "C_VOLUME_DOWN",
+            "C_MUTE",
+            "C_ALTERNATE_AUDIO_INCREMENT",
+            "C_BRI_UP",
+            "C_BRI_DN",
+            "C_BRI_MAX",
+            "C_BRI_MIN",
+            "C_BRI_AUTO",
+            "C_BKLT_TOG",
+            "C_PIP",
+            "C_CHAN_INC",
+            "C_CHAN_DEC",
+            "C_CHAN_LAST",
+            "C_MEDIA_VCR_PLUS",
+            "C_MODE_STEP",
+            "BT_SEL"
+        };
+
+        _zmkMacroModifiers = new List<string>
+        {
+            "RC(",
+            "LC(",
+            "RS",
+            "LS(",
+            "LCTRL(",
+            "RCTRL("
+        };
+
+        _macroModifiers = new List<string>
+        {
+            "Hold_Right_Command",
+            "Hold_Left_Command",
+            "Hold_Right_Shift",
+            "Hold_Left_Shift",
+            "Hold_Right_Controll",
+            "Hold_Left_Controll",
+        };
+    }
+
     public string GetZmkAction(string keyAction)
     {
-        return "res";
+        int index = _zmkKeyActions.IndexOf(keyAction);
+        return _zmkKeyActions[index];
     }
 
     public string GetZmkPress(string keyPress)
-    { 
-        return "res";
+    {
+        int index = _zmkKeyPresses.IndexOf(keyPress);
+        return _zmkKeyPresses[index];
     }
 
     public string GetAction(string zmkAction)
     {
-        return "res";
+        int index = _keyActions.IndexOf(zmkAction);
+        return _keyActions[index];
     }
 
     public string GetPress(string zmkPress)
     {
-        return "res";
+        int index = _keyPresses.IndexOf(zmkPress);
+        return _keyPresses[index];
+    }
+
+    public List<string> GetAllActions()
+    {
+        return _keyActions;
+    }
+
+    public List<string> GetAllPresses()
+    {
+        return _keyPresses;
     }
 }
