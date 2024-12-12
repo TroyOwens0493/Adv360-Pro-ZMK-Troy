@@ -57,6 +57,7 @@ class FileManager
         bool isKeymapLine = false;
         int i = 0;
         int zmkIndex = 0;
+        bool isCorrectKeymap = false;
 
         using (var reader = new StreamReader(_keymapFilePath))
         {
@@ -68,7 +69,12 @@ class FileManager
                 string cleanLine = line.Trim();
 
                 //Start parsing if we are on a keymap line
-                if (cleanLine == "bindings = <")
+                if (cleanLine.StartsWith(keyMapName))
+                {
+                    isCorrectKeymap = true;
+                }
+
+                if (cleanLine == "bindings = <" && isCorrectKeymap)
                 {
                     isKeymapLine = true;
                     continue;
@@ -76,7 +82,7 @@ class FileManager
 
                 if (isKeymapLine)
                 {
-                    if (i < 6) //Add the keymap lines
+                    if (i < 5) //Add the keymap lines
                     {
                         var keys = Regex.Split(cleanLine, @"(?=&)")
                                         .Where(part => !string.IsNullOrWhiteSpace(part))
@@ -86,7 +92,7 @@ class FileManager
                             //Get the key info and make the key obj.
                             string[] keyInfo = key.Split(' ');
                             string keyPress = keyInfo[0];
-                            string keyAction = keyInfo[0];
+                            string keyAction = keyInfo[1];
                             Key newKey = new(zmkIndex, keyAction, keyPress);
                             keymap.Add(newKey);
                         }
@@ -96,6 +102,7 @@ class FileManager
                     {
                         i = 0;
                         isKeymapLine = false;
+                        isCorrectKeymap = false;
                     }
                 }
             }

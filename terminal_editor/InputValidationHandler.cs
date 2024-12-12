@@ -42,8 +42,15 @@ class InputValidationHandler
         do
         {
             res = Console.ReadLine();
-        } while (res != "");
 
+            if (string.IsNullOrEmpty(res)) // Handles both null and empty string
+            {
+                Console.WriteLine("Please enter something");
+                continue;
+            }
+
+            break;
+        } while (true);
         return res.ToLower();
     }
 }

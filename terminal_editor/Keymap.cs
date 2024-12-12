@@ -2,6 +2,10 @@ abstract class Keymap
 {
     //Attr
     protected List<Key> _layout = new();
+    protected List<int> _keyIndexes = new();
+    protected List<int> _thumbClusterIndexes = new();
+    protected List<int> _clusterEnds = new();
+    protected List<int> _rowEnds = new();
 
     //Methods
     public void SetLayout(List<Key> layout)
@@ -16,48 +20,54 @@ abstract class Keymap
 
     abstract public int GetKeyPermanentIndex(int relativeIndex);
 
-    public int DispMainKeys(int cursorXStartPos, List<int> thumbClusterIndexes, List<int> keyIndexes, List<int> rowends)
+    public int DispMainKeys(int cursorYStartPos, List<int> keysToAvoidIndexes, List<int> keysToIncludeIndexes, List<int> rowEnds)
     {
-        Console.Clear();
-        int keyDisplayNumber = 1;
+        int cursorXPos = 0;
+        int cursorYPos = cursorYStartPos;
         int currentKeyIndex = 0;
-        int cursorYPosAfterWrite = 0;
-        int currentRow = 0;
-        int longestRow = 0;
 
-        foreach (Key key in _layout) //Loop through keys
+        foreach (Key key in _layout)
         {
-            int cursorColumn = 0;
-
-            if (currentKeyIndex == rowends[0]
-                    || currentKeyIndex == rowends[1]
-                    || currentKeyIndex == rowends[2]
-                    || currentKeyIndex == rowends[3]
-                    || currentKeyIndex == rowends[4])
+            // Skip keys that are part of the thumb cluster or other side
+            if (keysToAvoidIndexes.Contains(currentKeyIndex) || !keysToIncludeIndexes.Contains(currentKeyIndex))
             {
-                currentRow += 1;
-            }
-            else if (keyIndexes.Contains(currentKeyIndex)
-                    && !thumbClusterIndexes.Contains(currentKeyIndex))
-            {
-                cursorColumn += DisplayKey(key, cursorColumn, currentRow, currentKeyIndex);
-                if(cursorColumn > longestRow)
-                {
-                    longestRow = cursorColumn;
-                }
-                keyDisplayNumber++;
                 currentKeyIndex++;
+                continue;
             }
-            cursorYPosAfterWrite = ((currentRow) * 4) + 5;
-        }
-        Console.SetCursorPosition(cursorXStartPos, cursorYPosAfterWrite);
 
-        return longestRow;
+            // Display the current key
+            int keyWidth = DisplayKey(key, cursorXPos, cursorYPos, currentKeyIndex + 1);
+            cursorXPos += keyWidth + 2; // Add padding between keys
+
+            // Check if this is the end of a row
+            if (rowEnds.Contains(currentKeyIndex))
+            {
+                cursorYPos += 1; // Move to the next line
+                Console.Write(cursorYPos);
+                cursorXPos = 0; // Reset X position for the new row
+            }
+
+            currentKeyIndex++;
+        }
+        Console.Write(cursorYStartPos);
+
+        return cursorYPos;
     }
 
-    abstract public void Disp();
+    public void Disp()
+    {
+        Console.Clear();
+        // Display main keys and calculate the starting X position for the thumb cluster
+        var finalYCoord = DispMainKeys(0, _thumbClusterIndexes, _keyIndexes, _rowEnds);
 
-    abstract public int DispThumbCluster(int startingXPos);
+        //Add padding after diplaying main keys
+        finalYCoord += 1;
+        // Display the thumb cluster
+        Console.WriteLine("\n-----------Thumbcluster keys----------");
+        finalYCoord = DispMainKeys(finalYCoord, _keyIndexes, _thumbClusterIndexes, _clusterEnds);
+
+        Console.WriteLine();
+    }
 
     protected int DisplayKey(Key keyToDisp, int cursorColumn, int currentRow, int currentKeyIndex)
     {

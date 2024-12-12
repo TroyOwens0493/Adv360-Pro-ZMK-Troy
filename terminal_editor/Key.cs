@@ -8,6 +8,7 @@ class Key
     private string _keyPress;
     private string _isModKey;
     private Key _keyToModifiy;
+    private FileManager _fileMan = new FileManager("../config/adv360.keymap", "../config/macros.dtsi");
 
     //Methods
     public Key(int zmkIndex, string zmkKeyAction, string zmkKeyPress)
@@ -16,8 +17,8 @@ class Key
         _zmkKeyAction = zmkKeyAction;
         _zmkKeyPress = zmkKeyPress;
         KeyTranslator translate = new();
-        _keyPress = translate.GetPress(zmkKeyPress);
-        _keyAction = translate.GetAction(zmkKeyAction);
+        _keyPress = translate.GetPress(zmkKeyPress, zmkKeyAction);
+        _keyAction = translate.GetAction(zmkKeyAction, zmkKeyPress);
     }
 
     public Key(string keyAction, string keyPress)
@@ -25,8 +26,8 @@ class Key
         _keyAction = keyAction;
         _keyPress = keyPress;
         KeyTranslator translate = new();
-        _zmkKeyAction = translate.GetZmkAction(keyAction);
-        _zmkKeyPress = translate.GetZmkPress(keyPress);
+        _zmkKeyPress = translate.GetZmkPress(keyPress, keyAction);
+        _zmkKeyAction = translate.GetZmkAction(keyAction, keyPress);
     }
 
     public void SetZmkKeyIndex(int index)

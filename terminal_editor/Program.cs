@@ -10,11 +10,12 @@
         switch (userSelection)
         {
             case 1:
+                int layoutIndex = _menus.ChooseLayout() - 1;
+                List<string> keymapNames = _fileMan.ParseKeymapNames();
+                var layoutName = keymapNames[layoutIndex];
+
                 do
                 {
-                    int layoutIndex = _menus.ChooseLayout() - 1;
-                    List<string> keymapNames = _fileMan.ParseKeymapNames();
-                    var layoutName = keymapNames[layoutIndex];
                     string side = _menus.KeyBoardSideSelector();
                     var layout = _fileMan.ParseKeysInMap(layoutName);
 
@@ -23,7 +24,8 @@
                         var leftSide = new LeftSide(layout);
                         int keyRelativeIndex = _menus.EditLeftSide(leftSide);
                         int keyPermanentIndex = leftSide.GetKeyPermanentIndex(keyRelativeIndex);
-                        var finishedKey = _menus.EditKeyPressType(layout[keyPermanentIndex]);
+                        var newKeyPress = _menus.EditKeyPressType(layout[keyPermanentIndex]);
+                        var finishedKey = _menus.EditKeyAction(layout[keyPermanentIndex]);
                         layout[keyPermanentIndex] = finishedKey;
                         _fileMan.WriteKeymap(layoutName, leftSide);
                     }
@@ -32,17 +34,20 @@
                         var rightSide = new RightSide(layout);
                         int keyRelativeIndex = _menus.EditRightSide(rightSide);
                         int keyPermanentIndex = rightSide.GetKeyPermanentIndex(keyRelativeIndex);
-                        var finishedKey = _menus.EditKeyPressType(layout[keyPermanentIndex]);
+                        var newKeyPress = _menus.EditKeyPressType(layout[keyPermanentIndex]);
+                        var finishedKey = _menus.EditKeyAction(layout[keyPermanentIndex]);
                         layout[keyPermanentIndex] = finishedKey;
                         _fileMan.WriteKeymap(layoutName, rightSide);
                     }
                     Console.Clear();
-                    Console.WriteLine("Would you like to edit another key in the keymap? (y/n)");
+                    Console.WriteLine("Would you like to edit another key in this keymap? (y/n)");
                     string res = _input.GetStringFromUser();
                     if (res != "y")
                     {
                         break;
                     }
+                    Console.Clear();
+
                 } while (true);
                 break;
 
@@ -55,7 +60,7 @@
                     string newLayerName = _input.GetStringFromUser();
                     _fileMan.MakeNewKeymap(newLayerName);
                     Console.Clear();
-                    Console.WriteLine("Would you like to make a new keymap? (y/n)");
+                    Console.WriteLine("Would you like to make another new keymap? (y/n)");
                     var res = _input.GetStringFromUser();
                     if (res != "y")
                     {
@@ -67,7 +72,7 @@
             case 3:
                 do
                 {
-                } while(true);
+                } while (true);
                 break;
         }
     }

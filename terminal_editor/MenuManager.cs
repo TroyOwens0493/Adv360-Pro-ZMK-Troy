@@ -63,26 +63,37 @@ class MenuManager
     public Key EditKeyPressType(Key keyToEdit)
     {
         Console.Clear();
-        Console.WriteLine($"The currennt keypress for this key is {keyToEdit.GetKeyPress()}");
-        Console.WriteLine("What would you like the new keypress to be? ");
+
         var presses = _keyTans.GetAllPresses();
         PrintList(presses);
+        Console.WriteLine($"The currennt keypress for this key is {keyToEdit.GetKeyPress()}");
+        Console.WriteLine("What would you like the new keypress to be? ");
+
         int pressIndex = _userInput.GetIntFromUser(1, presses.Count() - 1);
-        keyToEdit.SetKeyPress(presses[pressIndex]);
-        keyToEdit.SetZmkPress(_keyTans.GetZmkPress(presses[pressIndex]));
+        var newKeyPress = presses[pressIndex];
+
+        keyToEdit.SetKeyPress(newKeyPress);
+        var newZmkPress = _keyTans.GetZmkPress(newKeyPress, keyToEdit.GetKeyAction());
+
+        keyToEdit.SetZmkPress(newZmkPress);
         return keyToEdit;
     }
 
     public Key EditKeyAction(Key keyToEdit)
     {
         Console.Clear();
-        Console.WriteLine($"The currennt key action for this key is {keyToEdit.GetKeyAction()}");
-        Console.WriteLine("What would you like the new action to be? ");
         var actions = _keyTans.GetAllActions();
         PrintList(actions);
+        Console.WriteLine($"The currennt key action for this key is {keyToEdit.GetKeyAction()}");
+        Console.WriteLine("What would you like the new action to be? ");
+
         int actionIndex = _userInput.GetIntFromUser(1, actions.Count() - 1);
-        keyToEdit.SetKeyAction(actions[actionIndex]);
-        keyToEdit.SetZmkAction(_keyTans.GetZmkAction(actions[actionIndex]));
+        var newAction = actions[actionIndex];
+
+        keyToEdit.SetKeyAction(newAction);
+        var newZmkAction = _keyTans.GetZmkAction(newAction, keyToEdit.GetKeyPress());
+
+        keyToEdit.SetZmkAction(newZmkAction);
         return keyToEdit;
     }
 
@@ -139,28 +150,34 @@ class MenuManager
         // Get the current cursor position at the bottom of existing content
         var x = 0;
         var y = Console.CursorTop;
-        var terminalHeight = Console.WindowHeight;
-        int columnWidth = 0;
+        var yStart = y;
+        var maxHeight = (Console.WindowHeight / 4) * 3;
+        bool hasMultipleColumns = false;
+
+        // Calculate a fixed column width based on the longest string in the list
+        int columnWidth = list.Max(item => $"{list.IndexOf(item) + 1}. {item}".Length) + 2;
 
         for (int i = 0; i < list.Count; i++)
         {
             // Print the option in the current position
             Console.SetCursorPosition(x, y);
             Console.Write($"{i + 1}. {list[i]}");
-            if (Console.CursorLeft > columnWidth)
-            {
-                columnWidth = Console.CursorLeft;
-            }
 
-            y++;  // Move down one line
+            y++; // Move down one line
 
             // Check if we need to move to the next column (halfway down the terminal)
-            if (y >= terminalHeight - 1)
+            if (y == maxHeight)
             {
-                y = Console.CursorTop - terminalHeight + 1;  // Reset y to start of next column
-                x += columnWidth + 1;  // Move x to the next column
-                columnWidth = 0;
+                hasMultipleColumns = true;
+                y = yStart;
+                x += columnWidth; // Move x to the next column
             }
         }
+        if (hasMultipleColumns)
+        {
+            Console.SetCursorPosition(0, maxHeight - 1);
+        }
+        Console.WriteLine();
+        Console.WriteLine();
     }
 }

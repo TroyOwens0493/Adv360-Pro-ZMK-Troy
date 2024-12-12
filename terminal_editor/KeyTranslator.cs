@@ -7,6 +7,7 @@ class KeyTranslator
     private readonly List<string> _keyActions = new();
     private readonly List<string> _keyPresses = new();
     private readonly List<string> _macroModifiers = new();
+    private FileManager _fileMan = new FileManager("../config/adv360.keymap", "../config/macros.dtsi");
 
     //Methods
     public KeyTranslator()
@@ -14,69 +15,79 @@ class KeyTranslator
         // List of normal English keycodes
         _keyPresses = new List<string>
         {
-            "Key Press",
-            "Key Hold",
-            "Layer Tap",
-            "To Layer",
-            "Toggle Layer",
+            "Momentary layer activation",
+            "Exclusively switch to a layer",
+            "Toggle a layer on/off",
+            "Layer-tap",
+            "Sticky key",
+            "Capsword behavior",
+            "Key press",
+            "Mod-tap",
+            "Home row mod",
+            "Custom macro definition",
+            "Mute audio",
+            "Increase volume",
+            "Decrease volume",
+            "Bluetooth control and device switching",
+            "RGB lighting control and effects",
+            "No action",
             "Transparent",
-            "None",
-            "Hold-Tap",
-            "Mod-Tap",
-            "Mod-Morph",
-            "Tap key in macro",
-            "Hold key in macro",
-            "Release key in macro",
-            "Key Toggle",
-            "Sticky Key",
-            "Sticky Layer",
-            "Tap Dance",
-            "Caps Word",
-            "Key Repeat",
-            "Mouse Key Press",
-            "Reset To Factory Settings",
-            "Enter Bootloader",
-            "Bluetooth",
-            "Indicator lights",
-            "Backlight",
-            "&ext_power",
-            "Soft off"
+            "Reset keyboard",
+            "Enter bootloader",
         };
 
         // List of ZMK keycodes
         _zmkKeyPresses = new List<string>
         {
-            "&kp",
             "&mo",
-            "&lt",
-            "&lt",
+            "&to",
             "&tog",
-            "&trans",
-            "&none",
-            "&ht-hp",
-            "&mt",
-            "&gresc",
-            "&macro_tap",
-            "&macro_press",
-            "&macro_release",
-            "&kt",
+            "&lt",
             "&sk",
-            "&sl",
-            "&td",
             "&caps_word",
-            "&key_repeat",
-            "&mkkp",
-            "&reset",
-            "&bootloader",
+            "&kp",
+            "&mt",
+            "&hrm",
+            "&macro",
+            "&mute",
+            "&vol_up",
+            "&vol_dn",
             "&bt",
-            "&rgb_ug",
-            "&bl",
-            "&ext_power",
-            "&soft_off"
+            "&rgb",
+            "&none",
+            "&trans",
+            "&reset",
+            "&bootloader"
         };
 
         _keyActions = new List<string>
         {
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z",
             "1 and !",
             "2 and @",
             "3 and #",
@@ -221,6 +232,32 @@ class KeyTranslator
 
         _zmkKeyActions = new List<string>
         {
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z",
             "N1",
             "N2",
             "N3",
@@ -384,28 +421,55 @@ class KeyTranslator
         };
     }
 
-    public string GetZmkAction(string keyAction)
+    public string GetZmkAction(string keyAction, string keyPress)
     {
-        int index = _zmkKeyActions.IndexOf(keyAction);
+        int index = _keyActions.IndexOf(keyAction);
         return _zmkKeyActions[index];
     }
 
-    public string GetZmkPress(string keyPress)
+    public string GetZmkPress(string keyPress, string keyAction)
     {
-        int index = _zmkKeyPresses.IndexOf(keyPress);
+        int index = _keyPresses.IndexOf(keyPress);
         return _zmkKeyPresses[index];
     }
 
-    public string GetAction(string zmkAction)
+    public string GetAction(string zmkAction, string zmkPress)
     {
-        int index = _keyActions.IndexOf(zmkAction);
-        return _keyActions[index];
+        var keyAction = "";
+        if (zmkPress == "&tog" || zmkPress == "&mo")
+        {
+            var keymapNames = _fileMan.ParseKeymapNames();
+            keyAction = keymapNames[int.Parse(zmkAction)];
+        }
+        else if (zmkPress.StartsWith("&macro"))
+        {
+            keyAction = zmkPress;
+        }
+        else if (zmkPress == "&none")
+        {
+            keyAction = "";
+        }
+        else
+        {
+            int index = _zmkKeyActions.IndexOf(zmkAction);
+            keyAction = _keyActions[index];
+        }
+        return keyAction;
     }
 
-    public string GetPress(string zmkPress)
+    public string GetPress(string zmkPress, string zmkAction)
     {
-        int index = _keyPresses.IndexOf(zmkPress);
-        return _keyPresses[index];
+        var keypress = "";
+        if (zmkPress.StartsWith("&macro"))
+        {
+            keypress = zmkPress;
+        }
+        else
+        {
+            int index = _zmkKeyPresses.IndexOf(zmkPress);
+            keypress = _keyPresses[index];
+        }
+        return keypress;
     }
 
     public List<string> GetAllActions()
