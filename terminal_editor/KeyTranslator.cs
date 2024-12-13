@@ -506,14 +506,30 @@ class KeyTranslator
         return _keyPresses;
     }
 
+    public List<string> GetAllZmkActions()
+    {
+        return _zmkKeyActions;
+    }
+
+    public List<string> GetAllZmkModifiers()
+    {
+        return _zmkMacroModifiers;
+    }
+
     public List<string> GetMacroModKeys()
     {
         return _macroModifiers;
     }
 
-    public string GetModifier(string modifier)
+    public string GetModifier(string zmkModifier)
     {
-        int modifierIndex = _zmkMacroModifiers.IndexOf(modifier.Trim());
+        int modifierIndex = _zmkMacroModifiers.IndexOf(zmkModifier.Trim());
         return _macroModifiers[modifierIndex];
+    }
+
+    public string GetZmkModifier(string modifier)
+    {
+        int modifierIndex = _macroModifiers.IndexOf(modifier.Trim());
+        return _zmkMacroModifiers[modifierIndex];
     }
 }

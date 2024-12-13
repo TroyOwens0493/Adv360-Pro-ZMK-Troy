@@ -73,16 +73,23 @@
                     Console.Clear();
                     var macroToEdit = _menus.ChooseMacro();
                     string addOrDelete = _menus.AddOrDeleteFromMacro();
-                    Macro newMacro = new();
+                    List<MacroAction> tempActions = new();
+                    Macro tempMacro = new Macro(tempActions);
                     if (addOrDelete == "add")
                     {
-                        newMacro = _menus.AddToMacro(_fileMan.LoadMacroFromFile(macroToEdit));
+                        var newMacro = _menus.AddToMacro(_fileMan.LoadMacroFromFile(macroToEdit));
+                        tempMacro = newMacro;
                     }
                     else
                     {
-                        newMacro = _menus.DeleteFromMacro(_fileMan.LoadMacroFromFile(macroToEdit));
+                        var newMacro = _menus.DeleteFromMacro(_fileMan.LoadMacroFromFile(macroToEdit));
+                        tempMacro = newMacro;
                     }
-                    _fileMan.WriteMacroToFile(newMacro, macroToEdit);
+                    //foreach (MacroAction Action in newMacro.GetMacro())
+                    //{
+                    //    Console.WriteLine($"{Action.GetModifier()}, {Action.GetAction()}");
+                    //}
+                    _fileMan.WriteMacroToFile(tempMacro, macroToEdit);
 
                     Console.WriteLine("Would you like to edit this macro more? (y/n);");
                     var res =_input.GetStringFromUser();

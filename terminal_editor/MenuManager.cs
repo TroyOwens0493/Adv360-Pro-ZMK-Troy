@@ -2,7 +2,7 @@ class MenuManager
 {
     InputValidationHandler _userInput = new();
     FileManager _fileMan = new FileManager("../config/adv360.keymap", "../config/macros.dtsi");
-    KeyTranslator _keyTans = new();
+    KeyTranslator _keyTrans = new();
 
     public int MainMenu()
     {
@@ -64,7 +64,7 @@ class MenuManager
     {
         Console.Clear();
 
-        var presses = _keyTans.GetAllPresses();
+        var presses = _keyTrans.GetAllPresses();
         PrintList(presses);
         Console.WriteLine($"The currennt keypress for this key is {keyToEdit.GetKeyPress()}");
         Console.WriteLine("What would you like the new keypress to be? ");
@@ -73,7 +73,7 @@ class MenuManager
         var newKeyPress = presses[pressIndex - 1];
 
         keyToEdit.SetKeyPress(newKeyPress);
-        var newZmkPress = _keyTans.GetZmkPress(newKeyPress, keyToEdit.GetKeyAction());
+        var newZmkPress = _keyTrans.GetZmkPress(newKeyPress, keyToEdit.GetKeyAction());
 
         keyToEdit.SetZmkPress(newZmkPress);
         return keyToEdit;
@@ -82,7 +82,7 @@ class MenuManager
     public Key EditKeyAction(Key keyToEdit)
     {
         Console.Clear();
-        var actions = _keyTans.GetAllActions();
+        var actions = _keyTrans.GetAllActions();
         var keyAction = keyToEdit.GetKeyAction();
         var zmkPress = keyToEdit.GetZmkPress();
         if (zmkPress == "&trans" || zmkPress == "&none")
@@ -109,7 +109,7 @@ class MenuManager
             var newAction = actions[actionIndex - 1];
 
             keyToEdit.SetKeyAction(newAction);
-            var newZmkAction = _keyTans.GetZmkAction(newAction, keyToEdit.GetKeyPress());
+            var newZmkAction = _keyTrans.GetZmkAction(newAction, keyToEdit.GetKeyPress());
 
             keyToEdit.SetZmkAction(newZmkAction);
             return keyToEdit;
@@ -156,8 +156,8 @@ class MenuManager
         Console.Clear();
         Console.WriteLine("Will this have a modifier key? (y/n)");
         var res = _userInput.GetStringFromUser();
-        var macroModKeys = _keyTans.GetMacroModKeys();
-        var keyActions = _keyTans.GetAllActions();
+        var macroModKeys = _keyTrans.GetMacroModKeys();
+        var keyActions = _keyTrans.GetAllActions();
 
         if (res == "y")
         {
@@ -165,12 +165,16 @@ class MenuManager
             PrintList(macroModKeys);
             Console.WriteLine("Which mod key would you like to add?");
             int modKeyIndex = _userInput.GetIntFromUser(1, macroModKeys.Count()) - 1;
+            var mod = _keyTrans.GetZmkModifier(macroModKeys[modKeyIndex]);
             Console.Clear();
             PrintList(keyActions);
             Console.WriteLine("What action would you like to perform with this mod key?");
             int actionIndex = _userInput.GetIntFromUser(1, keyActions.Count()) - 1;
-            MacroAction macroKey = new MacroAction(macroModKeys[modKeyIndex], keyActions[actionIndex]);
+            var action = _keyTrans.GetZmkAction(keyActions[actionIndex], "&kp");
+            //Console.WriteLine($"{mod}, {action}");
+            MacroAction macroKey = new MacroAction(mod, action);
             macroToEdit.AddAction(macroKey);
+            //Console.WriteLine($"{macroKey.GetModifier()}, {macroKey.GetAction()}");
         }
         else
         {
@@ -178,9 +182,15 @@ class MenuManager
             PrintList(keyActions);
             Console.WriteLine("What action would you like to add?");
             int actionIndex = _userInput.GetIntFromUser(1, keyActions.Count()) - 1;
-            MacroAction keyToAdd = new MacroAction("", keyActions[actionIndex]);
+            var action = _keyTrans.GetZmkAction(keyActions[actionIndex], "&kp");
+            MacroAction keyToAdd = new MacroAction("", action);
             macroToEdit.AddAction(keyToAdd);
         }
+
+        //foreach (MacroAction Action in macroToEdit.GetMacro())
+        //{
+        //    Console.WriteLine($"{Action.GetModifier()}, {Action.GetAction()}");
+        //}
 
         return macroToEdit;
     }

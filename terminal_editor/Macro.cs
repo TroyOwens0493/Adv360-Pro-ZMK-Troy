@@ -4,12 +4,6 @@ class Macro
     private List<MacroAction> _actions;
 
     //Methods
-    public Macro()
-    {
-        List<MacroAction> blank = new();
-        _actions = blank;
-    }
-
     public Macro(List<MacroAction> actions)
     {
         _actions = actions;
@@ -17,7 +11,13 @@ class Macro
 
     public void AddAction(MacroAction newAction)
     {
+        Console.WriteLine("Writing new action");
         _actions.Add(newAction);
+
+        foreach (MacroAction Action in _actions)
+        {
+            Console.WriteLine($"{Action.GetModifier()}, {Action.GetAction()}");
+        }
     }
 
     public void SetActions(List<MacroAction> actions)

@@ -262,10 +262,10 @@ class FileManager
         return macroNames;
     }
 
-    //Macro parser written by chatgpt because of time constraints
+    //Macro parser written partially by chatgpt because of time constraints
     public Macro ParseZmkMacro(string zmkMacro)
     {
-        var macro = new Macro();
+        List<MacroAction> newActions = new();
 
         // Regex to extract bindings
         var bindingsMatch = Regex.Match(zmkMacro, @"bindings\s*=\s*<(.*?)>;", RegexOptions.Singleline);
@@ -293,15 +293,17 @@ class FileManager
                         action = new MacroAction("", baseAction);
                     }
 
-                    macro.AddAction(action);
+                    newActions.Add(action);
                 }
             }
         }
+        
+        Macro macro = new Macro(newActions);
 
         return macro;
     }
 
-    //Macro loader wirtten by chatgpt because of time constraints
+    //Macro loader wirtten partially by chatgpt because of time constraints
     public Macro LoadMacroFromFile(string macroName)
     {
         string fileContent = File.ReadAllText(_macroFilePath);
@@ -320,7 +322,7 @@ class FileManager
     {
     }
 
-    //Macro writer written by chatgpt because of time constraints
+    //Macro writer written partially by chatgpt because of time constraints
     public void WriteMacroToFile(Macro macro, string macroName)
     {
         string macroDefinition = GenerateMacroDefinition(macro, macroName);
@@ -341,7 +343,7 @@ class FileManager
         File.WriteAllText(_macroFilePath, fileContent);
     }
 
-    //Generate macro def written by chatgpt because of time constraints
+    //Generate macro def written partially by chatgpt because of time constraints
     private string GenerateMacroDefinition(Macro macro, string macroName)
     {
         var macroData = new System.Text.StringBuilder();
@@ -355,7 +357,15 @@ class FileManager
         for (int i = 0; i < actions.Count; i++)
         {
             MacroAction action = actions[i];
-            macroData.Append($"&kp {action.GetAction()}({action.GetAction()})");
+            if (action.GetModifier() != "")
+            {
+                macroData.Append($"&kp {action.GetZmkModifier()}({action.GetZmkAction()})");
+            }
+            else
+            {
+                macroData.Append($"&kp {action.GetAction()}");
+            }
+
             if (i < actions.Count - 1)
             {
                 macroData.Append(">, <");

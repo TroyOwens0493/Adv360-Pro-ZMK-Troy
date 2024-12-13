@@ -14,13 +14,23 @@ class MacroAction
         _zmkAction = zmkAction;
         if (_zmkModifier != "")
         {
-        _modifier = GetModifier();
+        _modifier = _trans.GetModifier(_zmkModifier);
         }
         else
         {
             _modifier = "";
         }
-        _action = GetAction();
+        _action = _trans.GetAction(zmkAction, "&kp");
+    }
+
+    public string GetZmkModifier()
+    {
+        return _zmkModifier;
+    }
+
+    public string GetZmkAction()
+    {
+        return _zmkAction;
     }
 
     public string GetModifier()
