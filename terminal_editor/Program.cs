@@ -70,6 +70,31 @@
             case 3:
                 do
                 {
+                    Console.Clear();
+                    var macroToEdit = _menus.ChooseMacro();
+                    string addOrDelete = _menus.AddOrDeleteFromMacro();
+                    Macro newMacro = new();
+                    if (addOrDelete == "add")
+                    {
+                        newMacro = _menus.AddToMacro(_fileMan.LoadMacroFromFile(macroToEdit));
+                    }
+                    else
+                    {
+                        newMacro = _menus.DeleteFromMacro(_fileMan.LoadMacroFromFile(macroToEdit));
+                    }
+                    _fileMan.WriteMacroToFile(newMacro, macroToEdit);
+
+                    Console.WriteLine("Would you like to edit this macro more? (y/n);");
+                    var res =_input.GetStringFromUser();
+                    if (res == "y")
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        break;
+                    }
+
                 } while (true);
                 break;
         }

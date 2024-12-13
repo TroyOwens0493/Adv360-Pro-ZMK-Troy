@@ -6,8 +6,6 @@ class Key
     private string _zmkKeyPress;
     private string _keyAction;
     private string _keyPress;
-    private string _isModKey;
-    private Key _keyToModifiy;
     private FileManager _fileMan = new FileManager("../config/adv360.keymap", "../config/macros.dtsi");
 
     //Methods

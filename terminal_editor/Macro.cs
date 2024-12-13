@@ -1,20 +1,31 @@
 class Macro
 {
     //Attr
-    private List<Key> _actions;
+    private List<MacroAction> _actions;
 
     //Methods
-    public Macro(List<Key> actions)
+    public Macro()
+    {
+        List<MacroAction> blank = new();
+        _actions = blank;
+    }
+
+    public Macro(List<MacroAction> actions)
     {
         _actions = actions;
     }
 
-    public void AddAction(Key newAction)
+    public void AddAction(MacroAction newAction)
     {
         _actions.Add(newAction);
     }
 
-    public List<Key> GetMacro()
+    public void SetActions(List<MacroAction> actions)
+    {
+        _actions = actions;
+    }
+
+    public List<MacroAction> GetMacro()
     {
         return _actions;
     }

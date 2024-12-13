@@ -172,6 +172,11 @@ class FileManager
         //Write the raw data
         RightSide newLayout = new(defaultLayout);
         WriteKeymap(keymapName, newLayout);
+        FixLayoutFile(keymapName);
+    }
+
+    private void FixLayoutFile(string newKeymapName)
+    {
     }
 
     public void WriteKeymap(string keymapName, Keymap sideKeymap)
@@ -257,44 +262,110 @@ class FileManager
         return macroNames;
     }
 
-    public Macro ParseMacro(string macroName)
+    //Macro parser written by chatgpt because of time constraints
+    public Macro ParseZmkMacro(string zmkMacro)
     {
-        string[] lines = File.ReadAllLines(_macroFilePath);
-        bool isCorrectMacroLine = false;
-        List<Key> macroActions = new();
+        var macro = new Macro();
 
-        for (int i = 0; i < lines.Length; i++)
+        // Regex to extract bindings
+        var bindingsMatch = Regex.Match(zmkMacro, @"bindings\s*=\s*<(.*?)>;", RegexOptions.Singleline);
+        if (bindingsMatch.Success)
         {
-            var currentLine = lines[i];
-            if (currentLine.StartsWith(macroName))
-            {
-                isCorrectMacroLine = true;
-            }
+            string bindingsContent = bindingsMatch.Groups[1].Value;
 
-            if (isCorrectMacroLine && currentLine.StartsWith("bindings ="))
+            // Regex to parse individual bindings
+            var individualBindings = Regex.Matches(bindingsContent, @"&kp\s+(\w+)\((\w+)\)");
+
+            foreach (Match bindingMatch in individualBindings)
             {
-                var splitLine = currentLine.Split(",");
-                var splitLineList = splitLine.ToList();
-                splitLineList.RemoveAt(0);
-            }
-            else
-            {
-                continue;
+                if (bindingMatch.Success)
+                {
+                    string modifier = bindingMatch.Groups[1].Value;
+                    string baseAction = bindingMatch.Groups[2].Value;
+
+                    MacroAction action;
+                    if (!string.IsNullOrEmpty(modifier))
+                    {
+                        action = new MacroAction(modifier, baseAction);
+                    }
+                    else
+                    {
+                        action = new MacroAction("", baseAction);
+                    }
+
+                    macro.AddAction(action);
+                }
             }
         }
 
-        //All this is just to remove errs. Please delete later
-        Key newKey = new Key("", "");
-        Macro newMac = new Macro([newKey, newKey]);
-        return newMac;
+        return macro;
     }
 
+    //Macro loader wirtten by chatgpt because of time constraints
+    public Macro LoadMacroFromFile(string macroName)
+    {
+        string fileContent = File.ReadAllText(_macroFilePath);
+
+        // Find the macro block by name
+        var macroMatch = Regex.Match(fileContent, @$"{macroName}:.*?{{(.*?)}}", RegexOptions.Singleline);
+        if (macroMatch.Success)
+        {
+            string macroContent = macroMatch.Groups[0].Value;
+            return ParseZmkMacro(macroContent);
+        }
+
+        throw new Exception($"Macro '{macroName}' not found in {_macroFilePath}");
+    }
     public void MakeNewMacro(string macroName)
     {
     }
 
-    public void WriteMacro()
+    //Macro writer written by chatgpt because of time constraints
+    public void WriteMacroToFile(Macro macro, string macroName)
     {
+        string macroDefinition = GenerateMacroDefinition(macro, macroName);
+        string fileContent = File.ReadAllText(_macroFilePath);
+
+        string pattern = $@"{macroName}: {macroName}\{{.*?}};";
+        Regex regex = new Regex(pattern, RegexOptions.Singleline);
+
+        if (regex.IsMatch(fileContent))
+        {
+            fileContent = regex.Replace(fileContent, macroDefinition);
+        }
+        else
+        {
+            fileContent += Environment.NewLine + macroDefinition;
+        }
+
+        File.WriteAllText(_macroFilePath, fileContent);
+    }
+
+    //Generate macro def written by chatgpt because of time constraints
+    private string GenerateMacroDefinition(Macro macro, string macroName)
+    {
+        var macroData = new System.Text.StringBuilder();
+        macroData.AppendLine($"{macroName}: {macroName}{{");
+        macroData.AppendLine("compatible = \"zmk,behavior-macro\";");
+        macroData.AppendLine($"label = \"{macroName}\";");
+        macroData.AppendLine("#binding-cells = <0>;");
+        macroData.Append("bindings = <");
+
+        List<MacroAction> actions = macro.GetMacro();
+        for (int i = 0; i < actions.Count; i++)
+        {
+            MacroAction action = actions[i];
+            macroData.Append($"&kp {action.GetAction()}({action.GetAction()})");
+            if (i < actions.Count - 1)
+            {
+                macroData.Append(">, <");
+            }
+        }
+
+        macroData.AppendLine(">;");
+        macroData.AppendLine("};");
+
+        return macroData.ToString();
     }
 
     private void WriteDataToFile(string filePath, string[] data)

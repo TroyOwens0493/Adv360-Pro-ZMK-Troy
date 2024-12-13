@@ -124,32 +124,90 @@ class MenuManager
         _fileMan.MakeNewKeymap(layoutName);
     }
 
-    public int ChooseMacro()
+    public string ChooseMacro()
     {
         Console.Clear();
         Console.WriteLine("Which macro would you like to edit?");
         var macroNames = _fileMan.ParseMacroNames();
         PrintList(macroNames);
 
-        return _userInput.GetIntFromUser(1, macroNames.Count());
+        return macroNames[_userInput.GetIntFromUser(1, macroNames.Count()) - 1];
     }
 
-    public int EditMacro()
+    public string AddOrDeleteFromMacro()
     {
         Console.Clear();
         Console.WriteLine("What would you like to do?");
         Console.WriteLine("1. Add something 2. Delete something");
 
-        return _userInput.GetIntFromUser(1, 2);
+        int res = _userInput.GetIntFromUser(1, 2);
+        if (res == 1)
+        {
+            return "add";
+        }
+        else
+        {
+            return "delete";
+        }
     }
 
-    public void AddToMacro()
+    public Macro AddToMacro(Macro macroToEdit)
     {
         Console.Clear();
+        Console.WriteLine("Will this have a modifier key? (y/n)");
+        var res = _userInput.GetStringFromUser();
+        var macroModKeys = _keyTans.GetMacroModKeys();
+        var keyActions = _keyTans.GetAllActions();
+
+        if (res == "y")
+        {
+            Console.Clear();
+            PrintList(macroModKeys);
+            Console.WriteLine("Which mod key would you like to add?");
+            int modKeyIndex = _userInput.GetIntFromUser(1, macroModKeys.Count()) - 1;
+            Console.Clear();
+            PrintList(keyActions);
+            Console.WriteLine("What action would you like to perform with this mod key?");
+            int actionIndex = _userInput.GetIntFromUser(1, keyActions.Count()) - 1;
+            MacroAction macroKey = new MacroAction(macroModKeys[modKeyIndex], keyActions[actionIndex]);
+            macroToEdit.AddAction(macroKey);
+        }
+        else
+        {
+            Console.Clear();
+            PrintList(keyActions);
+            Console.WriteLine("What action would you like to add?");
+            int actionIndex = _userInput.GetIntFromUser(1, keyActions.Count()) - 1;
+            MacroAction keyToAdd = new MacroAction("", keyActions[actionIndex]);
+            macroToEdit.AddAction(keyToAdd);
+        }
+
+        return macroToEdit;
     }
 
-    public void DeleteFromMacro()
+    public Macro DeleteFromMacro(Macro macroToEdit)
     {
+        Console.Clear();
+        var macroKeys = macroToEdit.GetMacro();
+        List<string> macroActions = new();
+        foreach (MacroAction action in macroKeys)
+        {
+            if (action.GetZmkModifier() != "")
+            {
+                macroActions.Add($"{action.GetZmkModifier()}({action.GetZmkAction()}");
+            }
+            else
+            {
+                macroActions.Add(action.GetZmkAction());
+            }
+        }
+        PrintList(macroActions);
+        Console.WriteLine("What action would you like to delete?");
+        int actionToDeleteIndex = _userInput.GetIntFromUser(1, macroActions.Count()) - 1;
+        var actionToRemove = macroKeys[actionToDeleteIndex];
+        macroKeys.Remove(actionToRemove);
+        macroToEdit.SetActions(macroKeys);
+        return macroToEdit;
     }
 
     public void MakeNewMacro()

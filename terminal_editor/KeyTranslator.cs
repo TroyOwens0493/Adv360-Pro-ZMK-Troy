@@ -401,12 +401,12 @@ class KeyTranslator
 
         _zmkMacroModifiers = new List<string>
         {
-            "RC(",
-            "LC(",
+            "RC",
+            "LC",
             "RS",
-            "LS(",
-            "LCTRL(",
-            "RCTRL("
+            "LS",
+            "LCTRL",
+            "RCTRL"
         };
 
         _macroModifiers = new List<string>
@@ -504,5 +504,16 @@ class KeyTranslator
     public List<string> GetAllPresses()
     {
         return _keyPresses;
+    }
+
+    public List<string> GetMacroModKeys()
+    {
+        return _macroModifiers;
+    }
+
+    public string GetZmkModifier(string modifier)
+    {
+        int modifierIndex = _macroModifiers.IndexOf(modifier);
+        return _zmkMacroModifiers[modifierIndex];
     }
 }
