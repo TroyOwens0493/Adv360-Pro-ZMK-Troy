@@ -187,11 +187,6 @@ class MenuManager
             macroToEdit.AddAction(keyToAdd);
         }
 
-        //foreach (MacroAction Action in macroToEdit.GetMacro())
-        //{
-        //    Console.WriteLine($"{Action.GetModifier()}, {Action.GetAction()}");
-        //}
-
         return macroToEdit;
     }
 
@@ -220,8 +215,15 @@ class MenuManager
         return macroToEdit;
     }
 
-    public void MakeNewMacro()
+    public string MakeNewMacro()
     {
+        Console.Clear();
+        Console.WriteLine("What would you like your new macro to be called");
+        string macroName = _userInput.GetStringFromUser();
+        List<MacroAction> tempActions = new();
+        Macro newMacro = new Macro(tempActions);
+        _fileMan.WriteMacroToFile(newMacro, macroName);
+        return macroName;
     }
 
     public void DisplayAllKeyActions()

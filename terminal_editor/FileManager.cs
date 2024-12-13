@@ -153,96 +153,156 @@ class FileManager
 
         //Make the skeleton for the new keymap
         //Vars
-        string[] lines = File.ReadAllLines(_keymapFilePath);
-        var fileLength = lines.Count();
-        var indexToStartNewKeymap = fileLength - 2;
-        string[] fileData = new string[fileLength + 8];
-        Array.Copy(lines, 0, fileData, 0, indexToStartNewKeymap);
-        //Write skeleton
-        fileData[indexToStartNewKeymap] = keymapName + "{";
-        fileData[indexToStartNewKeymap + 1] = "bindings = <";
-        for (int i = 1; i < 6; i++)
-        {
-            fileData[indexToStartNewKeymap + i] = " ";
-        }
-        fileData[indexToStartNewKeymap + 6] = ">;";
-        fileData[indexToStartNewKeymap + 7] = "};";
-        WriteDataToFile(_keymapFilePath, fileData);
+        //string[] lines = File.ReadAllLines(_keymapFilePath);
+        //var fileLength = lines.Count();
+        //var indexToStartNewKeymap = fileLength - 2;
+        //string[] fileData = new string[fileLength + 8];
+        //Array.Copy(lines, 0, fileData, 0, indexToStartNewKeymap);
+        ////Write skeleton
+        //fileData[indexToStartNewKeymap] = keymapName + "{";
+        //fileData[indexToStartNewKeymap + 1] = "bindings = <";
+        //for (int i = 1; i < 6; i++)
+        //{
+        //    fileData[indexToStartNewKeymap + i] = " ";
+        //}
+        //fileData[indexToStartNewKeymap + 6] = ">;";
+        //fileData[indexToStartNewKeymap + 7] = "};";
+        //WriteDataToFile(_keymapFilePath, fileData);
 
         //Write the raw data
         RightSide newLayout = new(defaultLayout);
         WriteKeymap(keymapName, newLayout);
-        FixLayoutFile(keymapName);
-    }
-
-    private void FixLayoutFile(string newKeymapName)
-    {
     }
 
     public void WriteKeymap(string keymapName, Keymap sideKeymap)
     {
-        //Vars for writing to file
+        // Extract layout and initialize the helper object
         var layout = sideKeymap.GetLayout();
         RightSide keyMap = new RightSide(layout);
+
+        // Read existing file lines
         string[] lines = File.ReadAllLines(_keymapFilePath);
+
+        // Replace the keymap or append a new one if it doesn't exist
+        var updatedLines = FindAndReplaceOrAddKeymap(lines, keymapName, keyMap, layout);
+
+        // Write the updated lines back to the file
+        WriteDataToFile(_keymapFilePath, updatedLines);
+    }
+
+    private string BuildKeymapRow(RightSide keyMap, List<Key> layout, ref int currentKeyIndex)
+    {
+        string row = " ";
+        do
+        {
+            // Stop if we reach the maximum number of keys
+            if (currentKeyIndex >= layout.Count())
+            {
+                break;
+            }
+
+            var currentKey = layout[currentKeyIndex];
+            row += $"{currentKey.GetZmkPress()} {currentKey.GetZmkAction()} ";
+            currentKeyIndex++;
+
+            // Stop writing to the row when reaching the end of a row
+            if (keyMap.GetRowEnds().Contains(currentKeyIndex - 1))
+            {
+                break;
+            }
+
+        } while (true);
+
+        return row;
+    }
+
+    // Function to find the target keymap in the file, replace its rows, or add a new keymap
+    private string[] FindAndReplaceOrAddKeymap(string[] lines, string keymapName, RightSide keyMap, List<Key> layout)
+    {
         bool isCorrectKeymapLine = false;
+        bool keymapFound = false;
         int currentRow = 0;
         int currentKeyIndex = 0;
 
-        //Loop through the file
-        for (int lineNum = 0; lineNum < lines.Count(); lineNum++)
+        for (int lineNum = 0; lineNum < lines.Length; lineNum++)
         {
             var currentLine = lines[lineNum];
-            //Find the right keymap
+
+            // Find the target keymap
             if (currentLine.Contains(keymapName))
             {
                 isCorrectKeymapLine = true;
+                keymapFound = true;
                 currentRow = 0;
                 continue;
             }
 
-            // Don't overwrite the bindings marker
+            // Skip "bindings" marker without overwriting
             if (isCorrectKeymapLine && currentLine.Contains("bindings"))
             {
                 currentRow++;
                 continue;
             }
 
-            //Stop editing once we have passed the keymap
+            // Stop editing once the entire keymap has been replaced
             if (currentRow > 5)
             {
                 isCorrectKeymapLine = false;
             }
 
-            //Set the length of the row
+            // Replace lines with the new keymap rows
             if (isCorrectKeymapLine)
             {
-                // Write the new key data
-                currentLine = " ";
-                do
-                {
-                    if (currentKeyIndex == 75)
-                    {
-                        break;
-                    }
-                    Console.WriteLine(currentKeyIndex);
-                    var currentKey = layout[currentKeyIndex];
-                    currentLine += $"{currentKey.GetZmkPress()} {currentKey.GetZmkAction()} ";
-                    currentKeyIndex++;
-                    //Stop writing to row when reaching the end of the row
-                    if (keyMap.GetRowEnds().Contains(currentKeyIndex - 1))
-                    {
-                        lines[lineNum] = currentLine;
-                        break;
-                    }
-
-                } while (true);
-
+                lines[lineNum] = BuildKeymapRow(keyMap, layout, ref currentKeyIndex);
                 currentRow++;
             }
         }
-        //Write to file
-        WriteDataToFile(_keymapFilePath, lines);
+
+        // If the keymap wasn't found, append it to the file
+        if (!keymapFound)
+        {
+            lines = AddNewKeymap(lines, keymapName, keyMap, layout);
+        }
+
+        return lines;
+    }
+
+    // Function to append a new keymap at the end of the file
+    private string[] AddNewKeymap(string[] lines, string keymapName, RightSide keyMap, List<Key> layout)
+    {
+        var newLines = new List<string>(lines);
+
+        // Find the last keymap closing brace "};"
+        int lastKeymapIndex = Array.FindLastIndex(lines, line => line.Trim() == "};");
+
+        // Add the new keymap at the end
+        var newKeymap = new List<string>
+    {
+        $"        {keymapName} {{",
+        $"            bindings = <"
+    };
+
+        int currentKeyIndex = 0;
+        for (int row = 0; row < 6; row++)
+        {
+            newKeymap.Add($" {BuildKeymapRow(keyMap, layout, ref currentKeyIndex)}");
+        }
+
+        newKeymap.Add("            >;");
+        newKeymap.Add("        };");
+
+        // Insert the new keymap after the last keymap
+        if (lastKeymapIndex >= 0)
+        {
+            newLines.InsertRange(lastKeymapIndex, newKeymap);
+        }
+        else
+        {
+            // If no keymap is found, append at the end
+            newLines.AddRange(newKeymap);
+        }
+
+        return newLines.ToArray();
     }
 
     public List<string> ParseMacroNames()
@@ -297,7 +357,7 @@ class FileManager
                 }
             }
         }
-        
+
         Macro macro = new Macro(newActions);
 
         return macro;

@@ -85,14 +85,9 @@
                         var newMacro = _menus.DeleteFromMacro(_fileMan.LoadMacroFromFile(macroToEdit));
                         tempMacro = newMacro;
                     }
-                    //foreach (MacroAction Action in newMacro.GetMacro())
-                    //{
-                    //    Console.WriteLine($"{Action.GetModifier()}, {Action.GetAction()}");
-                    //}
                     _fileMan.WriteMacroToFile(tempMacro, macroToEdit);
 
-                    Console.WriteLine("Would you like to edit this macro more? (y/n);");
-                    var res =_input.GetStringFromUser();
+                    var res = _input.GetStringFromUser();
                     if (res == "y")
                     {
                         continue;
@@ -102,6 +97,29 @@
                         break;
                     }
 
+                } while (true);
+                break;
+
+            case 4:
+                Console.Clear();
+                var newMacroName = _menus.MakeNewMacro();
+                var userMacro = _fileMan.ParseZmkMacro(newMacroName);
+                do
+                {
+                    _menus.AddToMacro(userMacro);
+                    _fileMan.WriteMacroToFile(userMacro, newMacroName);
+                    Console.Clear();
+                    Console.WriteLine("Would you like to continue adding to this macro? (y/n)");
+
+                    var res = _input.GetStringFromUser();
+                    if (res == "y")
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 } while (true);
                 break;
         }
