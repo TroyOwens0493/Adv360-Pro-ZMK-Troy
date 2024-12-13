@@ -151,24 +151,6 @@ class FileManager
             defaultLayout.Add(newKey);
         }
 
-        //Make the skeleton for the new keymap
-        //Vars
-        //string[] lines = File.ReadAllLines(_keymapFilePath);
-        //var fileLength = lines.Count();
-        //var indexToStartNewKeymap = fileLength - 2;
-        //string[] fileData = new string[fileLength + 8];
-        //Array.Copy(lines, 0, fileData, 0, indexToStartNewKeymap);
-        ////Write skeleton
-        //fileData[indexToStartNewKeymap] = keymapName + "{";
-        //fileData[indexToStartNewKeymap + 1] = "bindings = <";
-        //for (int i = 1; i < 6; i++)
-        //{
-        //    fileData[indexToStartNewKeymap + i] = " ";
-        //}
-        //fileData[indexToStartNewKeymap + 6] = ">;";
-        //fileData[indexToStartNewKeymap + 7] = "};";
-        //WriteDataToFile(_keymapFilePath, fileData);
-
         //Write the raw data
         RightSide newLayout = new(defaultLayout);
         WriteKeymap(keymapName, newLayout);

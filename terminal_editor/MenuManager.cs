@@ -99,6 +99,17 @@ class MenuManager
             keyToEdit.SetZmkAction(res.ToString());
             return keyToEdit;
         }
+        else if (zmkPress.StartsWith("&macro"))
+        {
+            Console.Clear();
+            var macroNames = _fileMan.ParseMacroNames();
+            PrintList(macroNames);
+            Console.WriteLine("What macro would you like this to run?");
+            int res = _userInput.GetIntFromUser(1, macroNames.Count) - 1;
+            keyToEdit.SetZmkPress($"&{macroNames[res]}");
+            keyToEdit.SetZmkAction("");
+            return keyToEdit;
+        }
         else
         {
             PrintList(actions);
@@ -220,6 +231,10 @@ class MenuManager
         Console.Clear();
         Console.WriteLine("What would you like your new macro to be called");
         string macroName = _userInput.GetStringFromUser();
+        if (!macroName.StartsWith("macro"))
+        {
+            macroName = $"macro_{macroName}";
+        }
         List<MacroAction> tempActions = new();
         Macro newMacro = new Macro(tempActions);
         _fileMan.WriteMacroToFile(newMacro, macroName);

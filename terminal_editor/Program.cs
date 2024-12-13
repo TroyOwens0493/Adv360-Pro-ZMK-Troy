@@ -103,6 +103,7 @@
             case 4:
                 Console.Clear();
                 var newMacroName = _menus.MakeNewMacro();
+
                 var userMacro = _fileMan.ParseZmkMacro(newMacroName);
                 do
                 {
