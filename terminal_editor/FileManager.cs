@@ -199,56 +199,74 @@ class FileManager
     }
 
     // Function to find the target keymap in the file, replace its rows, or add a new keymap
-    private string[] FindAndReplaceOrAddKeymap(string[] lines, string keymapName, RightSide keyMap, List<Key> layout)
+private string[] FindAndReplaceOrAddKeymap(string[] lines, string keymapName, RightSide keyMap, List<Key> layout)
+{
+    List<string> updatedLines = new List<string>();
+    bool isInTargetKeymap = false;
+    int currentKeyIndex = 0;
+    int rowCount = 0;
+
+    for (int i = 0; i < lines.Length; i++)
     {
-        bool isCorrectKeymapLine = false;
-        bool keymapFound = false;
-        int currentRow = 0;
-        int currentKeyIndex = 0;
+        string currentLine = lines[i];
 
-        for (int lineNum = 0; lineNum < lines.Length; lineNum++)
+        // Detect start of the target keymap
+        if (currentLine.Contains(keymapName) && currentLine.Contains("{"))
         {
-            var currentLine = lines[lineNum];
+            isInTargetKeymap = true;
+            updatedLines.Add(currentLine);
+            continue;
+        }
 
-            // Find the target keymap
-            if (currentLine.Contains(keymapName))
+        // If we're in the target keymap and haven't completed replacing rows
+        if (isInTargetKeymap)
+        {
+            // Look for the bindings section
+            if (currentLine.Contains("bindings = <"))
             {
-                isCorrectKeymapLine = true;
-                keymapFound = true;
-                currentRow = 0;
+                updatedLines.Add(currentLine);
+                
+                // Replace the next 6 lines with new keymap rows
+                for (int row = 0; row < 6; row++)
+                {
+                    if (i + row + 1 < lines.Length)
+                    {
+                        updatedLines.Add(BuildKeymapRow(keyMap, layout, ref currentKeyIndex));
+                    }
+                }
+
+                // Skip the original keymap rows
+                i += 6;
+                rowCount = 6;
                 continue;
             }
 
-            // Skip "bindings" marker without overwriting
-            if (isCorrectKeymapLine && currentLine.Contains("bindings"))
+            // End of the keymap block
+            if (currentLine.Contains(">;") || currentLine.Contains("};"))
             {
-                currentRow++;
+                updatedLines.Add(currentLine);
+                isInTargetKeymap = false;
+                currentKeyIndex = 0;
+                rowCount = 0;
                 continue;
             }
-
-            // Stop editing once the entire keymap has been replaced
-            if (currentRow > 5)
-            {
-                isCorrectKeymapLine = false;
-            }
-
-            // Replace lines with the new keymap rows
-            if (isCorrectKeymapLine)
-            {
-                lines[lineNum] = BuildKeymapRow(keyMap, layout, ref currentKeyIndex);
-                currentRow++;
-            }
         }
 
-        // If the keymap wasn't found, append it to the file
-        if (!keymapFound)
+        // If not in target keymap or not replacing, add the original line
+        if (!isInTargetKeymap)
         {
-            lines = AddNewKeymap(lines, keymapName, keyMap, layout);
+            updatedLines.Add(currentLine);
         }
-
-        return lines;
     }
 
+    // If keymap was not found, append a new keymap
+    if (!updatedLines.Any(line => line.Contains(keymapName)))
+    {
+        updatedLines.AddRange(AddNewKeymap(lines, keymapName, keyMap, layout));
+    }
+
+    return updatedLines.ToArray();
+}
     // Function to append a new keymap at the end of the file
     private string[] AddNewKeymap(string[] lines, string keymapName, RightSide keyMap, List<Key> layout)
     {
