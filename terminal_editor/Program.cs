@@ -22,24 +22,22 @@
                     if (side == "left")
                     {
                         var leftSide = new LeftSide(layout);
-                        int keyRelativeIndex = _menus.EditLeftSide(leftSide);
-                        int keyPermanentIndex = leftSide.GetKeyPermanentIndex(keyRelativeIndex);
-                        var newKeyPress = _menus.EditKeyPressType(layout[keyPermanentIndex]);
-                        var finishedKey = _menus.EditKeyAction(layout[keyPermanentIndex]);
-                        layout[keyPermanentIndex] = finishedKey;
+                        int keyIndex = _menus.EditLeftSide(leftSide);
+                        var newKeyPress = _menus.EditKeyPressType(layout[keyIndex]);
+                        var finishedKey = _menus.EditKeyAction(newKeyPress);
+                        layout[keyIndex] = finishedKey;
                         _fileMan.WriteKeymap(layoutName, leftSide);
                     }
                     else
                     {
                         var rightSide = new RightSide(layout);
-                        int keyRelativeIndex = _menus.EditRightSide(rightSide);
-                        int keyPermanentIndex = rightSide.GetKeyPermanentIndex(keyRelativeIndex);
-                        var newKeyPress = _menus.EditKeyPressType(layout[keyPermanentIndex]);
-                        var finishedKey = _menus.EditKeyAction(layout[keyPermanentIndex]);
-                        layout[keyPermanentIndex] = finishedKey;
+                        int keyIndex = _menus.EditRightSide(rightSide);
+                        var newKeyPress = _menus.EditKeyPressType(layout[keyIndex]);
+                        var finishedKey = _menus.EditKeyAction(newKeyPress);
+                        layout[keyIndex] = finishedKey;
                         _fileMan.WriteKeymap(layoutName, rightSide);
                     }
-                    Console.Clear();
+                    //Console.Clear();
                     Console.WriteLine("Would you like to edit another key in this keymap? (y/n)");
                     string res = _input.GetStringFromUser();
                     if (res != "y")

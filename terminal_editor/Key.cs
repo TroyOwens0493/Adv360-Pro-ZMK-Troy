@@ -19,6 +19,7 @@ class Key
         KeyTranslator translate = new();
         _keyPress = translate.GetPress(zmkKeyPress, zmkKeyAction);
         _keyAction = translate.GetAction(zmkKeyAction, zmkKeyPress);
+
     }
 
     public Key(string keyAction, string keyPress)

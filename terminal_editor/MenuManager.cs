@@ -49,7 +49,7 @@ class MenuManager
         Console.Clear();
         leftSide.Disp();
         Console.Write("What key would you like to edit? ");
-        return _userInput.GetIntFromUser(1, 38) - 1;
+        return _userInput.GetIntFromUser(1, 75) - 1;
     }
 
     public int EditRightSide(Keymap rightSide)
@@ -57,7 +57,7 @@ class MenuManager
         Console.Clear();
         rightSide.Disp();
         Console.Write("What key would you like to edit? ");
-        return _userInput.GetIntFromUser(1, 38) - 1;
+        return _userInput.GetIntFromUser(1, 75) - 1;
     }
 
     public Key EditKeyPressType(Key keyToEdit)
@@ -70,7 +70,7 @@ class MenuManager
         Console.WriteLine("What would you like the new keypress to be? ");
 
         int pressIndex = _userInput.GetIntFromUser(1, presses.Count() - 1);
-        var newKeyPress = presses[pressIndex];
+        var newKeyPress = presses[pressIndex - 1];
 
         keyToEdit.SetKeyPress(newKeyPress);
         var newZmkPress = _keyTans.GetZmkPress(newKeyPress, keyToEdit.GetKeyAction());
@@ -83,18 +83,37 @@ class MenuManager
     {
         Console.Clear();
         var actions = _keyTans.GetAllActions();
-        PrintList(actions);
-        Console.WriteLine($"The currennt key action for this key is {keyToEdit.GetKeyAction()}");
-        Console.WriteLine("What would you like the new action to be? ");
+        var keyAction = keyToEdit.GetKeyAction();
+        var zmkPress = keyToEdit.GetZmkPress();
+        if (zmkPress == "&trans" || zmkPress == "&none")
+        {
+            keyToEdit.SetZmkAction("");
+            return keyToEdit;
+        }
+        else if (zmkPress == "&mo" || zmkPress == "&tog")
+        {
+            var keyMapNames = _fileMan.ParseKeymapNames();
+            PrintList(keyMapNames);
+            Console.WriteLine("What layer would you like this to toggle?");
+            int res = _userInput.GetIntFromUser(1, keyMapNames.Count) - 1;
+            keyToEdit.SetZmkAction(res.ToString());
+            return keyToEdit;
+        }
+        else
+        {
+            PrintList(actions);
+            Console.WriteLine($"The currennt key action for this key is {keyAction}");
+            Console.WriteLine("What would you like the new action to be? ");
 
-        int actionIndex = _userInput.GetIntFromUser(1, actions.Count() - 1);
-        var newAction = actions[actionIndex];
+            int actionIndex = _userInput.GetIntFromUser(1, actions.Count() - 1);
+            var newAction = actions[actionIndex - 1];
 
-        keyToEdit.SetKeyAction(newAction);
-        var newZmkAction = _keyTans.GetZmkAction(newAction, keyToEdit.GetKeyPress());
+            keyToEdit.SetKeyAction(newAction);
+            var newZmkAction = _keyTans.GetZmkAction(newAction, keyToEdit.GetKeyPress());
 
-        keyToEdit.SetZmkAction(newZmkAction);
-        return keyToEdit;
+            keyToEdit.SetZmkAction(newZmkAction);
+            return keyToEdit;
+        }
     }
 
     public void MakeLayout()

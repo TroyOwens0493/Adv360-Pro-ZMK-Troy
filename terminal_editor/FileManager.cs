@@ -92,7 +92,15 @@ class FileManager
                             //Get the key info and make the key obj.
                             string[] keyInfo = key.Split(' ');
                             string keyPress = keyInfo[0];
-                            string keyAction = keyInfo[1];
+                            string keyAction;
+                            if (keyInfo.Count() >= 2)
+                            {
+                                keyAction = keyInfo[1];
+                            }
+                            else
+                            {
+                                keyAction = "";
+                            }
                             Key newKey = new(zmkIndex, keyAction, keyPress);
                             keymap.Add(newKey);
                         }
@@ -115,17 +123,17 @@ class FileManager
         //Default vals for the keymap
         List<Key> defaultLayout = new();
         // List of keypresses
-        List<string> keyPresses = new List<string>
+        List<string> actions = new List<string>
         {
-            "EQUAL", "N1", "N2", "N3", "N4", "N5", "TOG 1", "MO 3", "N6", "N7", "N8", "N9", "N0", "MINUS",
+            "EQUAL", "N1", "N2", "N3", "N4", "N5", "1", "2", "N6", "N7", "N8", "N9", "N0", "MINUS",
             "TAB", "Q", "W", "E", "R", "T", "NONE", "NONE", "Y", "U", "I", "O", "P", "BSLH",
-            "ESC", "A", "S", "D", "F", "G", "NONE", "LCTRL", "LALT", "LGUI", "RCTRL", "NONE", "H", "J", "K", "L", "SEMI", "SQT",
-            "LSHFT", "Z", "X", "C", "V", "B", "HOME", "PG_UP", "N", "M", "COMMA", "DOT", "FSLH", "RSHFT",
-            "MO 2", "GRAVE", "CAPS", "LEFT", "RIGHT", "BSPC", "DEL", "END", "PG_DN", "ENTER", "SPACE", "UP", "DOWN", "LBKT", "RBKT", "MO 2"
+            "ESC", "A", "S", "D", "F", "G", "NONE", "LEFT_CONTROL", "LEFT_ALT", "LEFT_COMMAND", "RIGHT_CONTROL", "NONE", "H", "J", "K", "L", "SEMI", "SQT",
+            "LSHFT", "Z", "X", "C", "V", "B", "HOME", "PAGE_UP", "N", "M", "COMMA", "DOT", "FSLH", "RSHFT",
+            "2", "GRAVE", "CAPS", "LEFT", "RIGHT", "BSPC", "DEL", "END", "PAGE_DOWN", "ENTER", "SPACE", "UP", "DOWN", "LBKT", "RBKT", "2"
         };
 
         // List of actions
-        List<string> actions = new List<string>
+        List<string> presses = new List<string>
         {
             "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&tog", "&mo", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp",
             "&kp", "&kp", "&kp", "&kp", "&kp", "&kp", "&none", "&none", "&kp", "&kp", "&kp", "&kp", "&kp", "&kp",
@@ -135,9 +143,9 @@ class FileManager
         };
 
         //Build the default layout from the raw data.
-        for (int itr = 0; itr < keyPresses.Count(); itr++)
+        for (int itr = 0; itr < presses.Count(); itr++)
         {
-            var keyPress = keyPresses[itr];
+            var keyPress = presses[itr];
             var keyAction = actions[itr];
             Key newKey = new Key(itr, keyAction, keyPress);
             defaultLayout.Add(newKey);
@@ -170,58 +178,61 @@ class FileManager
     {
         //Vars for writing to file
         var layout = sideKeymap.GetLayout();
+        RightSide keyMap = new RightSide(layout);
         string[] lines = File.ReadAllLines(_keymapFilePath);
         bool isCorrectKeymapLine = false;
         int currentRow = 0;
+        int currentKeyIndex = 0;
 
         //Loop through the file
         for (int lineNum = 0; lineNum < lines.Count(); lineNum++)
         {
             var currentLine = lines[lineNum];
-            if (currentLine.StartsWith(keymapName))
+            //Find the right keymap
+            if (currentLine.Contains(keymapName))
             {
                 isCorrectKeymapLine = true;
                 currentRow = 0;
+                continue;
             }
 
             // Don't overwrite the bindings marker
-            if (currentRow == 0 & isCorrectKeymapLine)
+            if (isCorrectKeymapLine && currentLine.Contains("bindings"))
             {
+                currentRow++;
                 continue;
+            }
+
+            //Stop editing once we have passed the keymap
+            if (currentRow > 5)
+            {
+                isCorrectKeymapLine = false;
             }
 
             //Set the length of the row
             if (isCorrectKeymapLine)
             {
-                var rowLength = 0;
-                if (currentRow == 0)
-                {
-                    rowLength = 13;
-                }
-                else if (currentRow == 1)
-                {
-                    rowLength = 27;
-                }
-                else if (currentRow == 2)
-                {
-                    rowLength = 45;
-                }
-                else if (currentRow == 3)
-                {
-                    rowLength = 59;
-                }
-                else if (currentRow == 4)
-                {
-                    rowLength = 75;
-                }
-
                 // Write the new key data
                 currentLine = " ";
-                for (int currentKeyindex = 0; currentKeyindex < rowLength; currentKeyindex++)
+                do
                 {
-                    var currentKey = layout[currentKeyindex];
-                    currentLine += $"{currentKey.GetZmkPress()} {currentKey.GetZmkAction()}";
-                }
+                    if (currentKeyIndex == 75)
+                    {
+                        break;
+                    }
+                    Console.WriteLine(currentKeyIndex);
+                    var currentKey = layout[currentKeyIndex];
+                    currentLine += $"{currentKey.GetZmkPress()} {currentKey.GetZmkAction()} ";
+                    currentKeyIndex++;
+                    //Stop writing to row when reaching the end of the row
+                    if (keyMap.GetRowEnds().Contains(currentKeyIndex - 1))
+                    {
+                        lines[lineNum] = currentLine;
+                        break;
+                    }
+
+                } while (true);
+
                 currentRow++;
             }
         }

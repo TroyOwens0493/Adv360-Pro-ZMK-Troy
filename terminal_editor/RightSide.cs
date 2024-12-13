@@ -31,4 +31,9 @@ class RightSide : Keymap
     {
         return _keyIndexes[relativeIndex];
     }
+
+    public List<int> GetRowEnds()
+    {
+        return _rowEnds;
+    }
 }

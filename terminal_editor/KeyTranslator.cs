@@ -12,48 +12,47 @@ class KeyTranslator
     //Methods
     public KeyTranslator()
     {
-        // List of normal English keycodes
+        //Items that are commented out are not supported with this program yet
         _keyPresses = new List<string>
         {
             "Momentary layer activation",
-            "Exclusively switch to a layer",
+            //"Exclusively switch to a layer",
             "Toggle a layer on/off",
             "Layer-tap",
-            "Sticky key",
+            //"Sticky key",
             "Capsword behavior",
             "Key press",
-            "Mod-tap",
-            "Home row mod",
+            //"Mod-tap",
+            //"Home row mod",
             "Custom macro definition",
-            "Mute audio",
-            "Increase volume",
-            "Decrease volume",
-            "Bluetooth control and device switching",
-            "RGB lighting control and effects",
+            //"Mute audio",
+            //"Increase volume",
+            //"Decrease volume",
+            //"Bluetooth control and device switching",
+            //"RGB lighting control and effects",
             "No action",
             "Transparent",
             "Reset keyboard",
             "Enter bootloader",
         };
 
-        // List of ZMK keycodes
         _zmkKeyPresses = new List<string>
         {
             "&mo",
-            "&to",
+            //"&to",
             "&tog",
             "&lt",
-            "&sk",
+            //"&sk",
             "&caps_word",
             "&kp",
-            "&mt",
-            "&hrm",
+            //"&mt",
+            //"&hrm",
             "&macro",
-            "&mute",
-            "&vol_up",
-            "&vol_dn",
-            "&bt",
-            "&rgb",
+            //"&mute",
+            //"&vol_up",
+            //"&vol_dn",
+            //"&bt",
+            //"&rgb",
             "&none",
             "&trans",
             "&reset",
@@ -439,7 +438,14 @@ class KeyTranslator
         if (zmkPress == "&tog" || zmkPress == "&mo")
         {
             var keymapNames = _fileMan.ParseKeymapNames();
-            keyAction = keymapNames[int.Parse(zmkAction)];
+            try
+            {
+                keyAction = keymapNames[int.Parse(zmkAction)];
+            }
+            catch
+            {
+            throw new Exception("It looks like one of the keys toggles a layer that doesn't exist");
+            }
         }
         else if (zmkPress.StartsWith("&macro"))
         {
@@ -449,10 +455,21 @@ class KeyTranslator
         {
             keyAction = "";
         }
+        else if (zmkPress == "&trans")
+        {
+            keyAction = "Transparent";
+        }
         else
         {
             int index = _zmkKeyActions.IndexOf(zmkAction);
+            try
+            {
             keyAction = _keyActions[index];
+            }
+            catch
+            {
+                throw new Exception("Key action not found in list");
+            }
         }
         return keyAction;
     }
@@ -467,7 +484,14 @@ class KeyTranslator
         else
         {
             int index = _zmkKeyPresses.IndexOf(zmkPress);
+            try
+            {
             keypress = _keyPresses[index];
+            }
+            catch
+            {
+                throw new Exception("Key press not found in list");
+            }
         }
         return keypress;
     }
