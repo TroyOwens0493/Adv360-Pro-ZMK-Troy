@@ -192,13 +192,13 @@ class MenuManager
         List<string> macroActions = new();
         foreach (MacroAction action in macroKeys)
         {
-            if (action.GetZmkModifier() != "")
+            if (action.GetModifier() != "")
             {
-                macroActions.Add($"{action.GetZmkModifier()}({action.GetZmkAction()}");
+                macroActions.Add($"{action.GetModifier()}({action.GetAction()}");
             }
             else
             {
-                macroActions.Add(action.GetZmkAction());
+                macroActions.Add(action.GetAction());
             }
         }
         PrintList(macroActions);

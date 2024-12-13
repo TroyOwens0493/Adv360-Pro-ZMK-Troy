@@ -2,8 +2,9 @@ macro_copy_from_slack: macro_copy_from_slack{
 compatible = "zmk,behavior-macro";
 label = "macro_copy_from_slack";
 #binding-cells = <0>;
-bindings = <&kp RC(TAB)>, <&kp RC(A)>, <&kp RC(C)>, <&kp RC(TAB)>, <&kp RC(V)>;
+bindings = <&kp ()>, <&kp ()>, <&kp ()>, <&kp ()>, <&kp ()>, <&kp ()>;
 };
+
 macro_quotes: macro_quotes{
 compatible = "zmk,behavior-macro";
 label = "macro_quotes";

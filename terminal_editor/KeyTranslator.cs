@@ -511,9 +511,9 @@ class KeyTranslator
         return _macroModifiers;
     }
 
-    public string GetZmkModifier(string modifier)
+    public string GetModifier(string modifier)
     {
-        int modifierIndex = _macroModifiers.IndexOf(modifier);
-        return _zmkMacroModifiers[modifierIndex];
+        int modifierIndex = _zmkMacroModifiers.IndexOf(modifier.Trim());
+        return _macroModifiers[modifierIndex];
     }
 }

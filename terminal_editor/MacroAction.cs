@@ -8,19 +8,19 @@ class MacroAction
     private KeyTranslator _trans = new();
 
     //Methods
-    public MacroAction(string modifier, string action)
+    public MacroAction(string zmkModifier, string zmkAction)
     {
-        _modifier = modifier;
-        _action = action;
+        _zmkModifier = zmkModifier;
+        _zmkAction = zmkAction;
         if (_zmkModifier != "")
         {
-        _zmkModifier = GetZmkModifier();
+        _modifier = GetModifier();
         }
         else
         {
-            _zmkModifier = "";
+            _modifier = "";
         }
-        _zmkAction = GetZmkAction();
+        _action = GetAction();
     }
 
     public string GetModifier()
@@ -33,13 +33,13 @@ class MacroAction
         return _action;
     }
 
-    public string GetZmkModifier()
+    public string TranslateZmkModifier()
     {
-        return _trans.GetZmkModifier(_modifier);
+        return _trans.GetModifier(_modifier);
     }
 
-    public string GetZmkAction()
+    public string TranslateZmkAction()
     {
-         return _trans.GetZmkAction(_action, "&kp");
+         return _trans.GetAction(_action, "&kp");
     }
 }
