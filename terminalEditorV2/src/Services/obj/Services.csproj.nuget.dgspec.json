@@ -1,0 +1,226 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Services/Services.csproj": {}
+  },
+  "projects": {
+    "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Models/Models.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Models/Models.csproj",
+        "projectName": "Models",
+        "projectPath": "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Models/Models.csproj",
+        "packagesPath": "/Users/troyowens/.nuget/packages/",
+        "outputPath": "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Models/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/troyowens/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.14, 8.0.14]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.14, 8.0.14]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.202/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/Persistence.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/Persistence.csproj",
+        "projectName": "Persistence",
+        "projectPath": "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/Persistence.csproj",
+        "packagesPath": "/Users/troyowens/.nuget/packages/",
+        "outputPath": "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/troyowens/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Models/Models.csproj": {
+                "projectPath": "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Models/Models.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.14, 8.0.14]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.14, 8.0.14]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.202/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Services/Services.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Services/Services.csproj",
+        "projectName": "Services",
+        "projectPath": "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Services/Services.csproj",
+        "packagesPath": "/Users/troyowens/.nuget/packages/",
+        "outputPath": "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Services/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/troyowens/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Models/Models.csproj": {
+                "projectPath": "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Models/Models.csproj"
+              },
+              "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/Persistence.csproj": {
+                "projectPath": "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/Persistence.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.14, 8.0.14]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.14, 8.0.14]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.202/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

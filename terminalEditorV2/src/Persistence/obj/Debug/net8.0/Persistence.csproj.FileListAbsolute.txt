@@ -1,0 +1,16 @@
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/bin/Debug/net8.0/Persistence.deps.json
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/bin/Debug/net8.0/Persistence.dll
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/bin/Debug/net8.0/Persistence.pdb
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/bin/Debug/net8.0/Models.dll
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/bin/Debug/net8.0/Models.pdb
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/obj/Debug/net8.0/Persistence.csproj.AssemblyReference.cache
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/obj/Debug/net8.0/Persistence.GeneratedMSBuildEditorConfig.editorconfig
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/obj/Debug/net8.0/Persistence.AssemblyInfoInputs.cache
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/obj/Debug/net8.0/Persistence.AssemblyInfo.cs
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/obj/Debug/net8.0/Persistence.csproj.CoreCompileInputs.cache
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/obj/Debug/net8.0/Persistence.sourcelink.json
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/obj/Debug/net8.0/Persiste.61C28332.Up2Date
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/obj/Debug/net8.0/Persistence.dll
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/obj/Debug/net8.0/refint/Persistence.dll
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/obj/Debug/net8.0/Persistence.pdb
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/Persistence/obj/Debug/net8.0/ref/Persistence.dll

@@ -1,0 +1,6 @@
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/UI/obj/Debug/net8.0/UI.csproj.AssemblyReference.cache
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/UI/obj/Debug/net8.0/UI.GeneratedMSBuildEditorConfig.editorconfig
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/UI/obj/Debug/net8.0/UI.AssemblyInfoInputs.cache
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/UI/obj/Debug/net8.0/UI.AssemblyInfo.cs
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/UI/obj/Debug/net8.0/UI.csproj.CoreCompileInputs.cache
+/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/UI/obj/Debug/net8.0/UI.sourcelink.json

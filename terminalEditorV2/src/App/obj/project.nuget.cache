@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "987D3RmoF9o=",
+  "success": true,
+  "projectFilePath": "/Users/troyowens/Desktop/Programming_Docs/Adv360-Pro-ZMK-Troy/terminalEditorV2/src/App/App.csproj",
+  "expectedPackageFiles": [
+    "/Users/troyowens/.nuget/packages/microsoft.netcore.app.ref/8.0.14/microsoft.netcore.app.ref.8.0.14.nupkg.sha512",
+    "/Users/troyowens/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.14/microsoft.aspnetcore.app.ref.8.0.14.nupkg.sha512",
+    "/Users/troyowens/.nuget/packages/microsoft.netcore.app.host.osx-arm64/8.0.14/microsoft.netcore.app.host.osx-arm64.8.0.14.nupkg.sha512"
+  ],
+  "logs": []
+}
